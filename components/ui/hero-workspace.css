@@ -85,11 +85,6 @@
   .workspace-tooltip { font-size: 10px; padding: 6px 9px; }
   .workspace-tooltip--notebook { left: 32%; }
 }
-@media (max-width: 599px) {
-  /* A still perched bird avoids distracting movement on tiny screens. */
-  .workspace-bird { left: 56%; top: 33.5%; width: 5.2%; opacity: 1; transform: none; animation: none; }
-  .workspace-bird-wing { animation: none; }
-}
 @media (prefers-reduced-motion: no-preference) {
   .workspace-stage { animation: workspace-arrive .75s cubic-bezier(.22,1,.36,1) both; }
   .workspace-bird { animation: workspace-bird-journey 24s linear infinite both; }
@@ -143,4 +138,10 @@
   .mug-steam path { opacity: .72; }
   .workspace-scene { transform: none !important; }
   .workspace-hotspot, .workspace-hotspot svg, .workspace-tooltip, .workspace-shortcuts button { transition: none; }
+}
+
+@media (max-width: 599px) {
+  /* A still perched bird avoids distracting movement on tiny screens. */
+  .workspace-bird { left: 56%; top: 33.5%; width: 5.2%; opacity: 1; transform: none; animation: none; }
+  .workspace-bird-wing { animation: none; }
 }
