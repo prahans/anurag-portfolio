@@ -75,7 +75,8 @@ test("desktop calls to action and active section follow their destinations", asy
   await expect(page).toHaveURL(/#contact$/);
   await expect(page.locator("#contact")).toBeInViewport();
   await expect(page.getByRole("navigation").getByRole("link", { name: "05. Contact" })).toHaveAttribute("aria-current", "location");
-  await expect(page.locator(".contact-actions a").first()).toHaveAttribute("href", "https://github.com/prahans");
+  await expect(page.locator(".contact-button--email")).toHaveAttribute("href", "mailto:prahanspanuhar4@gmail.com");
+  await expect(page.locator(".contact-social-link").first()).toHaveAttribute("href", "https://github.com/prahans");
 });
 
 test("reduced motion keeps all content visible and disables animated scrolling", async ({ page }) => {
@@ -98,4 +99,23 @@ test("essential content and anchor links work without JavaScript", async ({ brow
   await expect(page.locator("#work")).toBeInViewport();
   await expect(page.locator(".project-card")).toHaveCount(3);
   await context.close();
+});
+
+test("contact methods are visible and use valid email, phone, and social links", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#contact");
+    const contact = page.locator("#contact");
+    const email = contact.locator('a[href="mailto:prahanspanuhar4@gmail.com"]');
+    const phone = contact.locator('a[href="tel:+9779707108983"]');
+    const github = contact.locator('a[href="https://github.com/prahans"]');
+    const linkedin = contact.locator('a[href="https://www.linkedin.com/in/anurag-panuhar-786265381/"]');
+    for (const link of [email, phone, github, linkedin]) {
+      await expect(link).toBeVisible();
+    }
+    await expect(phone).toContainText("+977 9707108983");
+    await expect(linkedin).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(github).toHaveAttribute("rel", "noopener noreferrer");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  }
 });
