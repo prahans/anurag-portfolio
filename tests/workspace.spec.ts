@@ -159,6 +159,10 @@ test("coffee steam drifts continuously, without clicking or hovering the mug", a
   await mug.click();
   await expect(page.locator("#coffee-tooltip")).toBeVisible();
   await page.mouse.move(10, 10);
+  // Clicking pins the note open; moving away should not dismiss it.
+  await expect(page.locator("#coffee-tooltip")).toBeVisible();
+  // An actual outside pointerdown dismisses the pinned note.
+  await page.mouse.click(10, 10);
   await expect(page.locator("#coffee-tooltip")).not.toBeVisible();
   await expect(steam).toBeVisible();
   await expect(firstWisp).toHaveCSS("animation-name", "coffee-steam");
