@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
 
 type CopyStatus = "idle" | "copied" | "error";
@@ -28,8 +28,16 @@ function copyWithSelection(email: string): boolean {
 
 export function CopyEmailButton({ email }: { email: string }) {
   const [status, setStatus] = useState<CopyStatus>("idle");
+  const resetTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimeout.current !== null) clearTimeout(resetTimeout.current);
+    };
+  }, []);
 
   async function handleCopy() {
+    if (resetTimeout.current !== null) clearTimeout(resetTimeout.current);
     let copied = false;
 
     if (navigator.clipboard?.writeText) {
@@ -43,6 +51,12 @@ export function CopyEmailButton({ email }: { email: string }) {
 
     if (!copied) copied = copyWithSelection(email);
     setStatus(copied ? "copied" : "error");
+    if (copied) {
+      resetTimeout.current = setTimeout(() => {
+        setStatus("idle");
+        resetTimeout.current = null;
+      }, 2400);
+    }
   }
 
   return (
@@ -53,10 +67,9 @@ export function CopyEmailButton({ email }: { email: string }) {
         data-status={status}
         onClick={handleCopy}
         aria-label="Copy email address"
-        title="Copy email address"
+        data-tooltip={status === "copied" ? "Copied!" : status === "error" ? "Couldn't copy" : "Copy email address"}
       >
-        {status === "copied" ? <Check size={17} aria-hidden="true" /> : <Copy size={17} aria-hidden="true" />}
-        <span>{status === "copied" ? "Copied!" : "Copy"}</span>
+        {status === "copied" ? <Check size={19} aria-hidden="true" /> : <Copy size={19} aria-hidden="true" />}
       </button>
       {status !== "idle" && (
         <span

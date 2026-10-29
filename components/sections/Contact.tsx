@@ -49,7 +49,7 @@ export function Contact() {
                 {site.phone && (
                   <a className="contact-phone-link" href={`tel:${site.phone}`}>
                     <Phone size={17} aria-hidden="true" />
-                    <span>Give me a call</span>
+                    <span>Let’s have a chat</span>
                     <strong>{site.phoneDisplay}</strong>
                     <ArrowUpRight size={15} aria-hidden="true" />
                   </a>
