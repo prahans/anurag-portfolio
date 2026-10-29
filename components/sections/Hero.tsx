@@ -27,7 +27,7 @@ export function Hero() {
             </ul>
           </Reveal>
         </div>
-        <Reveal className="hero-art-reveal" delay={0.1}><HeroArtwork /></Reveal>
+        <div className="hero-art-reveal"><HeroArtwork /></div>
       </div>
     </section>
   );

@@ -33,6 +33,24 @@ export function WorkspacePanel({ kind, onClose, returnFocusRef }: WorkspacePanel
     dialogRef.current?.close();
   }
 
+  function keepFocusInside(event: KeyboardEvent<HTMLDialogElement>) {
+    if (event.key !== "Tab") return;
+    // Native modal dialogs make the page inert; explicitly wrap at the edges
+    // as well, so Tab does not jump to the browser chrome in Chromium.
+    const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), a[href], [tabindex="0"]',
+    )).filter((element) => element.getClientRects().length > 0 && element.tabIndex >= 0);
+    const first = controls[0];
+    const last = controls.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first?.focus();
+    }
+  }
+
   return (
     <dialog
       ref={dialogRef}
@@ -44,6 +62,7 @@ export function WorkspacePanel({ kind, onClose, returnFocusRef }: WorkspacePanel
         returnFocusRef.current?.focus({ preventScroll: true });
       }}
       onCancel={(event) => { event.preventDefault(); closePanel(); }}
+      onKeyDown={keepFocusInside}
       onPointerDown={(event) => { backdropPointerDown.current = isBackdrop(event); }}
       onClick={(event) => {
         if (backdropPointerDown.current && isBackdrop(event)) closePanel();

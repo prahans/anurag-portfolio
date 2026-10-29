@@ -100,28 +100,32 @@ Place actual screenshots in `public/images/projects/` and reference them as `/im
 
 The three included entries and SVG previews are explicitly provisional concepts, not screenshots or claims of completed applications.
 
-## Replace the developer illustration
+## Workspace artwork and interactions
 
-1. Add a transparent PNG or WebP to `public/images/hero/`.
-2. Set `site.heroCharacterSrc` in `data/site.ts` to its public path, such as `/images/hero/developer-v2.webp`.
-3. Update `heroCharacterAlt` to describe the new illustration.
-4. Check the composition on desktop and mobile. A 3:2 asset, similar to the included 1536 × 1024 image, fits the existing slot. Leave room around the head and desk edges and preserve genuine alpha transparency.
+The hero uses the approved `design/hero-workspace-reference.png`, cropped and edge-masked into `public/images/hero/workspace-v1.webp`. The 1109 × 684 asset is approximately 190 KiB and retains the original scene. It contains no duplicated navigation or hero copy. The original reference remains unchanged. Crop, mask, and hotspot coordinates are documented in [design/WORKSPACE-ASSET.md](design/WORKSPACE-ASSET.md).
 
-`components/ui/HeroArtwork.tsx` owns the image slot. The character, chair, laptop, desk, and tabletop objects are grouped in the current foreground illustration; replacing this asset replaces that group. The mountain postcard, handwritten notes, and window lighting remain separate elements and do not require layout changes. `mountainImageSrc` configures the Nepal photograph independently.
+`site.heroWorkspaceSrc` and `heroWorkspaceAlt` in `data/site.ts` configure the asset. `components/ui/HeroArtwork.tsx` and `hero-workspace.css` keep the image and percentage-based hotspots in a shared aspect-ratio container. If the artwork composition changes, update the hotspot coordinates against the new image and repeat responsive checks.
 
-The generated figure is an illustrative representation, not Anurag's real photograph. The exact generation prompt and the licensed Annapurna photograph attribution are recorded in [design/ASSETS.md](design/ASSETS.md).
+- The laptop opens an accessible dialog with keyboard-operated Code and Preview tabs. The preview's “Add an idea” button updates a local demo counter.
+- The notebook opens a short personal note. Both dialogs support close buttons, Escape, backdrop dismissal, contained keyboard focus, and focus restoration.
+- The mug displays steam and a chai message on hover/focus or tap. Escape or an outside tap dismisses the message. Visible Workspace, Notes, and Chai controls provide larger touch targets.
+- Entrance, sunlight, and small pointer-depth effects respect reduced motion. The artwork is visible without JavaScript; inactive controls remain hidden.
+
+The postcard and other objects remain part of the flattened artwork. Dialog content does not replace the baked-in screen pixels, and the mug does not physically tilt. The previous portrait and its separate decorations are no longer rendered.
+
+Focused checks live in `tests/workspace.spec.ts`. With the production server running on port 3100, run `pnpm test:e2e`; use `pnpm lint`, `pnpm exec tsc --noEmit`, and `pnpm build` for the other checks.
 
 ## Verification
 
-Verified with `npm run lint`, `npx tsc --noEmit`, and `npm run build`. The production page also passes 10 Playwright checks covering 360, 390, 768, 1024, 1280, and 1440-pixel viewports, image loading, all five actual font families, horizontal overflow, mobile menu and Escape handling, anchor destinations, active navigation, reduced motion, and essential content with JavaScript disabled. No browser console errors were found. Desktop, tablet, and mobile screenshots were inspected against the approved reference.
+Verified with `pnpm lint`, `pnpm exec tsc --noEmit`, and `pnpm build`. The production page passes 25 Playwright checks covering 360, 390, 768, 1024, 1280, and 1440-pixel viewports, image loading, all five actual font families, horizontal overflow, mobile navigation, contact and project controls, workspace hotspots and panels, keyboard focus, reduced motion, and essential content with JavaScript disabled. No browser console errors were found. Desktop, tablet, and mobile screenshots were inspected against the approved artwork.
 
 To reproduce browser checks, run a production server in one terminal, then the tests in another:
 
 ```bash
-npm run build
-npm run start -- --hostname 127.0.0.1 --port 3100
+pnpm build
+pnpm start --hostname 127.0.0.1 --port 3100
 # In a second terminal:
-npm run test:e2e
+pnpm test:e2e
 ```
 
 Tests use a locally installed Chrome by default. Set `PLAYWRIGHT_CHANNEL=msedge` to use Edge, or install Chrome with `npx playwright install chrome` if necessary. Set `PLAYWRIGHT_BASE_URL` for a server at a different address. Successful full-page screenshots are saved in `artifacts/portfolio-{width}.png`; test artifacts are ignored by Git. The in-app preview browser was unavailable, so visual QA used headless Chrome.
@@ -130,7 +134,7 @@ Tests use a locally installed Chrome by default. Set `PLAYWRIGHT_CHANNEL=msedge`
 
 - Project names, descriptions, technologies, and previews remain editable placeholders until real project content is supplied.
 - Only the supplied GitHub profile is configured; there is no contact form or email delivery backend.
-- The illustration is newly generated, so the pose and workspace details differ from the flattened reference. The character and desk objects are grouped within a single replaceable asset.
+- Workspace objects and small lettering are baked into the approved flattened image. Objects move together; interactions open separate panels or add steam above the existing mug.
 - Skills use local brand icons, with configurable text fallbacks for future entries; no proficiency claims are made.
 - Dark mode and an introduction video are omitted because neither is configured.
 - Fonts require network access on an uncached build. No runtime remote image service is required for the included local assets.
