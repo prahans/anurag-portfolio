@@ -17,10 +17,10 @@ export function HeroArtwork() {
   const hydrated = useSyncExternalStore(subscribe, clientSnapshot, serverSnapshot);
   const reducedMotion = useReducedMotion();
   const [panel, setPanel] = useState<"laptop" | "notebook" | null>(null);
-  const [chaiPinned, setChaiPinned] = useState(false);
-  const [chaiHovered, setChaiHovered] = useState(false);
-  const [chaiFocused, setChaiFocused] = useState(false);
-  const [chaiDismissed, setChaiDismissed] = useState(false);
+  const [coffeePinned, setCoffeePinned] = useState(false);
+  const [coffeeHovered, setCoffeeHovered] = useState(false);
+  const [coffeeFocused, setCoffeeFocused] = useState(false);
+  const [coffeeDismissed, setCoffeeDismissed] = useState(false);
   const openerRef = useRef<HTMLButtonElement | null>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const finePointer = useRef(false);
@@ -28,7 +28,7 @@ export function HeroArtwork() {
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 110, damping: 24, mass: 0.6 });
   const springY = useSpring(y, { stiffness: 110, damping: 24, mass: 0.6 });
-  const chaiVisible = !panel && !chaiDismissed && (chaiPinned || chaiHovered || chaiFocused);
+  const coffeeVisible = !panel && !coffeeDismissed && (coffeePinned || coffeeHovered || coffeeFocused);
 
   useEffect(() => {
     const media = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -39,11 +39,11 @@ export function HeroArtwork() {
   }, [x, y]);
 
   useEffect(() => {
-    if (!chaiVisible) return;
-    const dismiss = () => { setChaiPinned(false); setChaiDismissed(true); };
+    if (!coffeeVisible) return;
+    const dismiss = () => { setCoffeePinned(false); setCoffeeDismissed(true); };
     const onKey = (event: globalThis.KeyboardEvent) => { if (event.key === "Escape") dismiss(); };
     const onPointer = (event: globalThis.PointerEvent) => {
-      if (event.target instanceof Element && !event.target.closest("[data-chai-control], #chai-tooltip")) dismiss();
+      if (event.target instanceof Element && !event.target.closest("[data-coffee-control], #coffee-tooltip")) dismiss();
     };
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onPointer);
@@ -51,7 +51,7 @@ export function HeroArtwork() {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("pointerdown", onPointer);
     };
-  }, [chaiVisible]);
+  }, [coffeeVisible]);
 
   function resetDepth() { x.set(0); y.set(0); }
 
@@ -65,21 +65,21 @@ export function HeroArtwork() {
 
   function openPanel(kind: "laptop" | "notebook", event: MouseEvent<HTMLButtonElement>) {
     openerRef.current = event.currentTarget;
-    setChaiPinned(false);
-    setChaiDismissed(true);
+    setCoffeePinned(false);
+    setCoffeeDismissed(true);
     resetDepth();
     setPanel(kind);
   }
 
-  function toggleChai() {
-    setChaiDismissed(chaiPinned);
-    setChaiPinned(!chaiPinned);
+  function toggleCoffee() {
+    setCoffeeDismissed(coffeePinned);
+    setCoffeePinned(!coffeePinned);
     resetDepth();
   }
 
-  const chaiFocus = {
-    onFocus: () => { setChaiFocused(true); setChaiDismissed(false); resetDepth(); },
-    onBlur: () => setChaiFocused(false),
+  const coffeeFocus = {
+    onFocus: () => { setCoffeeFocused(true); setCoffeeDismissed(false); resetDepth(); },
+    onBlur: () => setCoffeeFocused(false),
   };
 
   return (
@@ -111,21 +111,22 @@ export function HeroArtwork() {
             <button
               type="button"
               className="workspace-hotspot workspace-hotspot--mug"
-              aria-label="Fueled by curiosity & chai"
-              aria-describedby={chaiVisible ? "chai-tooltip" : undefined}
-              aria-expanded={chaiVisible}
-              data-chai-control
-              onPointerEnter={(event) => { if (event.pointerType === "mouse") { setChaiHovered(true); setChaiDismissed(false); } }}
-              onPointerLeave={() => setChaiHovered(false)}
-              onClick={toggleChai}
-              {...chaiFocus}
+              aria-label="Fueled by curiosity & coffee"
+              aria-describedby={coffeeVisible ? "coffee-tooltip" : undefined}
+              aria-expanded={coffeeVisible}
+              data-coffee-control
+              onPointerEnter={(event) => { if (event.pointerType === "mouse") { setCoffeeHovered(true); setCoffeeDismissed(false); } }}
+              onPointerLeave={() => setCoffeeHovered(false)}
+              onClick={toggleCoffee}
+              {...coffeeFocus}
             />
-            <svg className={`mug-steam${chaiVisible ? " is-visible" : ""}`} viewBox="0 0 80 90" fill="none" aria-hidden="true">
+            {/* Steam drifts continuously; interaction controls only the coffee note. */}
+            <svg className="mug-steam" viewBox="0 0 80 90" fill="none" aria-hidden="true">
               <path d="M23 84 C6 63 39 48 23 22" />
               <path d="M42 80 C26 58 58 42 40 6" />
               <path d="M60 84 C43 64 76 49 59 25" />
             </svg>
-            <span className="workspace-tooltip workspace-tooltip--mug" id="chai-tooltip" role="tooltip" hidden={!chaiVisible}>Fueled by curiosity &amp; chai ☕</span>
+            <span className="workspace-tooltip workspace-tooltip--mug" id="coffee-tooltip" role="tooltip" hidden={!coffeeVisible}>Fueled by curiosity &amp; coffee ☕</span>
           </div>
         </motion.div>
       </div>
@@ -134,7 +135,7 @@ export function HeroArtwork() {
         <div className="workspace-shortcuts" role="group" aria-label="Explore the workspace artwork">
           <button type="button" aria-label="Open workspace panel" onClick={(event) => openPanel("laptop", event)}><Code2 size={14} aria-hidden="true" /> Workspace</button>
           <button type="button" aria-label="Open notebook" onClick={(event) => openPanel("notebook", event)}><NotebookPen size={14} aria-hidden="true" /> Notes</button>
-          <button type="button" aria-label="Show chai note" aria-expanded={chaiVisible} aria-describedby={chaiVisible ? "chai-tooltip" : undefined} data-chai-control onClick={toggleChai} {...chaiFocus}><Coffee size={14} aria-hidden="true" /> Chai</button>
+          <button type="button" aria-label="Show coffee note" aria-expanded={coffeeVisible} aria-describedby={coffeeVisible ? "coffee-tooltip" : undefined} data-coffee-control onClick={toggleCoffee} {...coffeeFocus}><Coffee size={14} aria-hidden="true" /> Coffee</button>
         </div>
       </div>
       <WorkspacePanel kind={panel} onClose={() => setPanel(null)} returnFocusRef={openerRef} />

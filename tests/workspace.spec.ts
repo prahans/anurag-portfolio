@@ -141,14 +141,37 @@ test("desktop scene depth stays restrained and laptop hover is discoverable", as
   })).toBeLessThan(0.1);
 });
 
+test("coffee steam drifts continuously, without clicking or hovering the mug", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await openArtwork(page);
+
+  const steam = page.locator(".mug-steam");
+  await expect(steam).toBeVisible();
+  await expect(steam).toHaveCSS("opacity", "0.82");
+  const firstWisp = steam.locator("path").first();
+  await expect(firstWisp).toHaveCSS("animation-name", "coffee-steam");
+  expect(await firstWisp.evaluate((element) =>
+    element.getAnimations().some((animation) => animation.playState === "running"),
+  )).toBe(true);
+
+  const mug = page.getByRole("button", { name: "Fueled by curiosity & coffee", exact: true });
+  await mug.click();
+  await expect(page.locator("#coffee-tooltip")).toBeVisible();
+  await page.mouse.move(10, 10);
+  await expect(page.locator("#coffee-tooltip")).not.toBeVisible();
+  await expect(steam).toBeVisible();
+  await expect(firstWisp).toHaveCSS("animation-name", "coffee-steam");
+});
+
 test("mug offers a tooltip on pointer hover and keyboard focus", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await openArtwork(page);
-  const mug = page.getByRole("button", { name: "Fueled by curiosity & chai", exact: true });
-  const tooltip = page.locator("#chai-tooltip");
+  const mug = page.getByRole("button", { name: "Fueled by curiosity & coffee", exact: true });
+  const tooltip = page.locator("#coffee-tooltip");
   await mug.hover();
   await expect(tooltip).toBeVisible();
-  await expect(tooltip).toHaveText("Fueled by curiosity & chai ☕");
+  await expect(tooltip).toHaveText("Fueled by curiosity & coffee ☕");
   await expect(page.locator(".mug-steam")).toBeVisible();
   await page.mouse.move(10, 10);
   await expect(tooltip).not.toBeVisible();
@@ -164,12 +187,12 @@ test.describe("touch workspace", () => {
 
   test("mug message can be tapped open and dismissed without hovering", async ({ page }) => {
     await openArtwork(page);
-    const mug = page.getByRole("button", { name: "Fueled by curiosity & chai", exact: true });
+    const mug = page.getByRole("button", { name: "Fueled by curiosity & coffee", exact: true });
     await mug.tap();
-    await expect(page.locator("#chai-tooltip")).toBeVisible();
-    await expect(page.locator("#chai-tooltip")).toHaveText("Fueled by curiosity & chai ☕");
+    await expect(page.locator("#coffee-tooltip")).toBeVisible();
+    await expect(page.locator("#coffee-tooltip")).toHaveText("Fueled by curiosity & coffee ☕");
     await page.touchscreen.tap(8, 90);
-    await expect(page.locator("#chai-tooltip")).not.toBeVisible();
+    await expect(page.locator("#coffee-tooltip")).not.toBeVisible();
   });
 });
 
@@ -186,8 +209,10 @@ test("reduced motion leaves the artwork static while interactions remain usable"
     return { x: matrix.m41, y: matrix.m42 };
   });
   expect(translation).toEqual({ x: 0, y: 0 });
-  await page.getByRole("button", { name: "Fueled by curiosity & chai", exact: true }).focus();
-  await expect(page.locator("#chai-tooltip")).toBeVisible();
+  await page.getByRole("button", { name: "Fueled by curiosity & coffee", exact: true }).focus();
+  await expect(page.locator("#coffee-tooltip")).toBeVisible();
+  await expect(page.locator(".mug-steam")).toBeVisible();
+  await expect(page.locator(".mug-steam path").first()).toHaveCSS("animation-name", "none");
   const runningAnimations = await scene.evaluate((element) => element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running").length);
   expect(runningAnimations).toBe(0);
   await page.getByRole("button", { name: "Read my notes", exact: true }).click();
