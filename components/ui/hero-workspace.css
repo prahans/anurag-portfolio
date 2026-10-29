@@ -15,6 +15,30 @@
 .workspace-hotspot:focus-visible svg { fill: #315cf51a; stroke: #a8bdff; stroke-width: 3; }
 /* Source screen: (1056,388), (1426,366), (1466,579), (1093,609). */
 .workspace-hotspot--laptop { left: 35.26%; top: 39.47%; width: 36.97%; height: 35.53%; clip-path: polygon(0 9.06%, 90.24% 0, 100% 87.64%, 9% 100%); }
+/* Two decorative layers sit on top of the existing screen pixels; no extra
+   image, canvas, timer or pointer event is needed. Coordinates track the source
+   artwork just like the accessible laptop hotspot. */
+.workspace-laptop-effects { position: absolute; inset: 0; pointer-events: none; }
+.workspace-laptop-glow {
+  position: absolute;
+  left: 35.26%; top: 39.47%; width: 36.97%; height: 35.53%;
+  clip-path: polygon(0 9.06%, 90.24% 0, 100% 87.64%, 9% 100%);
+  background: radial-gradient(ellipse at 23% 67%, #6ec2fa35 0%, #315cf51c 43%, transparent 77%);
+  mix-blend-mode: screen;
+  opacity: .26;
+}
+.workspace-laptop-cursor {
+  position: absolute;
+  left: 44.8%; top: 65.3%; width: max(1px, .16%); height: 2.05%;
+  background: #a8f5dc;
+  border-radius: 1px;
+  box-shadow: 0 0 4px #88ebc9a6;
+  transform: rotate(-5deg);
+  opacity: .8;
+}
+.workspace-hotspot--laptop:is(:hover, :focus-visible) ~ .workspace-laptop-effects .workspace-laptop-glow {
+  filter: brightness(1.35);
+}
 /* Notebook and mug rectangles are normalized against the same source crop. */
 .workspace-hotspot--notebook { left: 15.51%; top: 76.02%; width: 27.5%; height: 16.38%; clip-path: polygon(0 22.34%, 51.16% 0, 100% 73.2%, 26.55% 100%); }
 .workspace-hotspot--mug { left: 80.1%; top: 57.4%; width: 14.5%; height: 18.5%; border-radius: 26% 39% 32% 30%; transition: box-shadow .2s ease, background .2s ease; }
@@ -47,11 +71,21 @@
 @media (prefers-reduced-motion: no-preference) {
   .workspace-stage { animation: workspace-arrive .75s cubic-bezier(.22,1,.36,1) both; }
   .workspace-sunlight { animation: afternoon-light 9s ease-in-out 1 both; }
+  .workspace-laptop-glow { animation: laptop-screen-breathe 6s ease-in-out infinite; }
+  .workspace-laptop-cursor { animation: laptop-caret-blink 1.4s steps(1, end) infinite; }
   .mug-steam path { animation: coffee-steam 3.1s ease-in-out infinite; }
   .mug-steam path:nth-child(2) { animation-delay: -1s; animation-duration: 3.5s; }
   .mug-steam path:nth-child(3) { animation-delay: -2.1s; animation-duration: 2.9s; }
   @keyframes workspace-arrive { from { opacity: .2; transform: translateY(9px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes afternoon-light { 0% { opacity: .04; } 45% { opacity: .14; } 100% { opacity: .09; } }
+  @keyframes laptop-screen-breathe {
+    0%, 100% { opacity: .18; }
+    50% { opacity: .48; }
+  }
+  @keyframes laptop-caret-blink {
+    0%, 51% { opacity: .85; }
+    52%, 100% { opacity: 0; }
+  }
   @keyframes coffee-steam {
     0%, 100% { transform: translate(0, 3px); opacity: .52; }
     45% { transform: translate(1px, -2px); opacity: .94; }
@@ -59,7 +93,9 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .workspace-stage, .workspace-sunlight, .mug-steam path { animation: none; }
+  .workspace-stage, .workspace-sunlight, .mug-steam path, .workspace-laptop-glow, .workspace-laptop-cursor { animation: none; }
+  .workspace-laptop-glow { opacity: .23; }
+  .workspace-laptop-cursor { opacity: .8; }
   .mug-steam path { opacity: .72; }
   .workspace-scene { transform: none !important; }
   .workspace-hotspot, .workspace-hotspot svg, .workspace-tooltip, .workspace-shortcuts button { transition: none; }

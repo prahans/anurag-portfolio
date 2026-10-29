@@ -104,6 +104,12 @@ export function HeroArtwork() {
               <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="1,10 89,1 99,87 10,99" /></svg>
             </button>
             <span className="workspace-tooltip workspace-tooltip--laptop" aria-hidden="true">Explore my workspace</span>
+            {/* Independent, non-interactive overlays follow the screen's source-image coordinates.
+                The original code/UI pixels remain unchanged and the hotspot stays clickable. */}
+            <div className="workspace-laptop-effects" aria-hidden="true">
+              <span className="workspace-laptop-glow" />
+              <span className="workspace-laptop-cursor" />
+            </div>
             <button type="button" className="workspace-hotspot workspace-hotspot--notebook" aria-label="Read my notes" aria-haspopup="dialog" onClick={(event) => openPanel("notebook", event)}>
               <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="1,23 51,1 99,73 27,99" /></svg>
             </button>

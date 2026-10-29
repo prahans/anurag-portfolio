@@ -141,6 +141,33 @@ test("desktop scene depth stays restrained and laptop hover is discoverable", as
   })).toBeLessThan(0.1);
 });
 
+test("laptop glows and the code cursor blinks continuously without hover", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await openArtwork(page);
+
+  const glow = page.locator(".workspace-laptop-glow");
+  const cursor = page.locator(".workspace-laptop-cursor");
+  await expect(glow).toBeVisible();
+  await expect(cursor).toBeVisible();
+  await expect(glow).toHaveCSS("animation-name", "laptop-screen-breathe");
+  await expect(cursor).toHaveCSS("animation-name", "laptop-caret-blink");
+  expect(await glow.evaluate((element) =>
+    element.getAnimations().some((animation) => animation.playState === "running"),
+  )).toBe(true);
+  expect(await cursor.evaluate((element) =>
+    element.getAnimations().some((animation) => animation.playState === "running"),
+  )).toBe(true);
+  await expect(glow.locator("..")).toHaveAttribute("aria-hidden", "true");
+
+  // The laptop still opens its original accessible Code/Preview dialog.
+  const laptop = page.getByRole("button", { name: "Explore my workspace", exact: true });
+  await laptop.click();
+  await expect(page.getByRole("dialog", { name: "Explore my workspace" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).not.toBeVisible();
+});
+
 test("coffee steam drifts continuously, without clicking or hovering the mug", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -217,6 +244,8 @@ test("reduced motion leaves the artwork static while interactions remain usable"
   await expect(page.locator("#coffee-tooltip")).toBeVisible();
   await expect(page.locator(".mug-steam")).toBeVisible();
   await expect(page.locator(".mug-steam path").first()).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".workspace-laptop-glow")).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".workspace-laptop-cursor")).toHaveCSS("animation-name", "none");
   const runningAnimations = await scene.evaluate((element) => element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running").length);
   expect(runningAnimations).toBe(0);
   await page.getByRole("button", { name: "Read my notes", exact: true }).click();
