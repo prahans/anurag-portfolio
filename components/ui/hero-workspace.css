@@ -3,6 +3,23 @@
 .workspace-stage { position: relative; width: 100%; flex-shrink: 0; }
 .workspace-scene { position: relative; width: 100%; aspect-ratio: 1109 / 684; }
 .workspace-image { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* A warm, illustrated little bird follows the image canvas (not the page).
+   It lands above the laptop's existing top bezel at x 56%, y 33.5%.
+   The bird is decorative and never captures a pointer or keyboard event. */
+.workspace-bird {
+  position: absolute;
+  left: 56%;
+  top: 33.5%;
+  width: 4.1%;
+  aspect-ratio: 50 / 42;
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: 50% 85%;
+  will-change: transform;
+}
+.workspace-bird svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 1px 1px #30291c26); }
+.workspace-bird-wing { transform-origin: 23px 21px; }
+
 .workspace-sunlight { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 83% 12%, #fff2c3 0%, #ffe9b440 24%, transparent 61%); opacity: .09; mask-image: linear-gradient(to bottom, #000 65%, transparent 98%); }
 .workspace-interactions { position: absolute; inset: 0; pointer-events: none; }
 .workspace-interactions[hidden], .workspace-tooltip[hidden] { display: none; }
@@ -68,14 +85,39 @@
   .workspace-tooltip { font-size: 10px; padding: 6px 9px; }
   .workspace-tooltip--notebook { left: 32%; }
 }
+@media (max-width: 599px) {
+  /* A still perched bird avoids distracting movement on tiny screens. */
+  .workspace-bird { left: 56%; top: 33.5%; width: 5.2%; opacity: 1; transform: none; animation: none; }
+  .workspace-bird-wing { animation: none; }
+}
 @media (prefers-reduced-motion: no-preference) {
   .workspace-stage { animation: workspace-arrive .75s cubic-bezier(.22,1,.36,1) both; }
+  .workspace-bird { animation: workspace-bird-journey 24s linear infinite both; }
+  .workspace-bird-wing { animation: workspace-bird-wingbeat 24s linear infinite; }
   .workspace-sunlight { animation: afternoon-light 9s ease-in-out 1 both; }
   .workspace-laptop-glow { animation: laptop-screen-breathe 6s ease-in-out infinite; }
   .workspace-laptop-cursor { animation: laptop-caret-blink 1.4s steps(1, end) infinite; }
   .mug-steam path { animation: coffee-steam 3.1s ease-in-out infinite; }
   .mug-steam path:nth-child(2) { animation-delay: -1s; animation-duration: 3.5s; }
   .mug-steam path:nth-child(3) { animation-delay: -2.1s; animation-duration: 2.9s; }
+  /* One leisurely loop: arrive over the plants and postcard, land on
+     the laptop bezel, rest, then fly out into the sunlit side of the scene. */
+  @keyframes workspace-bird-journey {
+    0%, 3% { left: -5%; top: 49%; opacity: 0; transform: rotate(-16deg) scale(.84); }
+    9% { left: 10%; top: 34%; opacity: 1; transform: rotate(-12deg) scale(.94); }
+    18% { left: 26%; top: 18%; opacity: 1; transform: rotate(-3deg) scale(1); }
+    28% { left: 44%; top: 23%; opacity: 1; transform: rotate(9deg) scale(1); }
+    38%, 74% { left: 56%; top: 33.5%; opacity: 1; transform: rotate(0deg) scale(1); }
+    79% { left: 62%; top: 27%; opacity: 1; transform: rotate(-14deg) scale(1); }
+    89% { left: 83%; top: 13%; opacity: 1; transform: rotate(-7deg) scale(.94); }
+    97%, 100% { left: 105%; top: 8%; opacity: 0; transform: rotate(-12deg) scale(.84); }
+  }
+  /* Wings fold while the bird rests at 38%-74% of the loop. */
+  @keyframes workspace-bird-wingbeat {
+    0%, 4%, 8%, 12%, 16%, 20%, 24%, 28%, 32%, 36%, 76%, 80%, 84%, 88%, 92%, 96%, 100% { transform: rotate(-19deg) scaleY(.83); }
+    2%, 6%, 10%, 14%, 18%, 22%, 26%, 30%, 34%, 78%, 82%, 86%, 90%, 94% { transform: rotate(23deg) scaleY(.78); }
+    38%, 74% { transform: rotate(0deg) scaleY(1); }
+  }
   @keyframes workspace-arrive { from { opacity: .2; transform: translateY(9px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes afternoon-light { 0% { opacity: .04; } 45% { opacity: .14; } 100% { opacity: .09; } }
   @keyframes laptop-screen-breathe {
@@ -94,6 +136,8 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .workspace-stage, .workspace-sunlight, .mug-steam path, .workspace-laptop-glow, .workspace-laptop-cursor { animation: none; }
+  .workspace-bird, .workspace-bird-wing { animation: none; }
+  .workspace-bird { left: 56%; top: 33.5%; opacity: 1; transform: none; }
   .workspace-laptop-glow { opacity: .23; }
   .workspace-laptop-cursor { opacity: .8; }
   .mug-steam path { opacity: .72; }

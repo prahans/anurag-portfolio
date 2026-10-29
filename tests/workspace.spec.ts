@@ -168,6 +168,40 @@ test("laptop glows and the code cursor blinks continuously without hover", async
   await expect(page.getByRole("dialog")).not.toBeVisible();
 });
 
+test("a tiny decorative bird flies across the hero, perches, and never blocks laptop clicks", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await openArtwork(page);
+
+  const bird = page.locator(".workspace-bird");
+  await expect(bird).toHaveCount(1);
+  await expect(bird).toHaveAttribute("aria-hidden", "true");
+  await expect(bird).toHaveCSS("pointer-events", "none");
+  await expect(bird).toHaveCSS("animation-name", "workspace-bird-journey");
+  await expect(bird.locator(".workspace-bird-wing")).toHaveCSS("animation-name", "workspace-bird-wingbeat");
+  await expect(bird).toHaveCSS("animation-duration", "24s");
+  expect(await bird.evaluate((element) =>
+    element.getAnimations().some((animation) => animation.playState === "running"),
+  )).toBe(true);
+
+  // The same laptop hotspot remains clickable with the decorative bird present.
+  await page.getByRole("button", { name: "Explore my workspace", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Explore my workspace" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).not.toBeVisible();
+});
+
+test("bird stays perched and still on small screens", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await openArtwork(page);
+  const bird = page.locator(".workspace-bird");
+  await expect(bird).toBeVisible();
+  await expect(bird).toHaveCSS("animation-name", "none");
+  await expect(bird).toHaveCSS("left", /.+/);
+  await expect(bird.locator(".workspace-bird-wing")).toHaveCSS("animation-name", "none");
+});
+
 test("coffee steam drifts continuously, without clicking or hovering the mug", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -246,6 +280,9 @@ test("reduced motion leaves the artwork static while interactions remain usable"
   await expect(page.locator(".mug-steam path").first()).toHaveCSS("animation-name", "none");
   await expect(page.locator(".workspace-laptop-glow")).toHaveCSS("animation-name", "none");
   await expect(page.locator(".workspace-laptop-cursor")).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".workspace-bird")).toBeVisible();
+  await expect(page.locator(".workspace-bird")).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".workspace-bird-wing")).toHaveCSS("animation-name", "none");
   const runningAnimations = await scene.evaluate((element) => element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running").length);
   expect(runningAnimations).toBe(0);
   await page.getByRole("button", { name: "Read my notes", exact: true }).click();
