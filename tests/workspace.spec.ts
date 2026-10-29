@@ -148,7 +148,7 @@ test("coffee steam drifts continuously, without clicking or hovering the mug", a
 
   const steam = page.locator(".mug-steam");
   await expect(steam).toBeVisible();
-  await expect(steam).toHaveCSS("opacity", "0.82");
+  await expect(steam).toHaveCSS("opacity", "0.94");
   const firstWisp = steam.locator("path").first();
   await expect(firstWisp).toHaveCSS("animation-name", "coffee-steam");
   expect(await firstWisp.evaluate((element) =>
