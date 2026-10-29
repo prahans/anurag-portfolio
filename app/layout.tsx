@@ -3,6 +3,7 @@ import { Caveat, DM_Sans, Fraunces, IBM_Plex_Mono, Instrument_Serif } from "next
 import { site } from "@/data/site";
 import "./globals.css";
 import "@/components/sections/sections.css";
+import "@/components/sections/featured-projects.css";
 
 const body = DM_Sans({ variable: "--font-body", subsets: ["latin"], display: "swap" });
 const editorial = Fraunces({ variable: "--font-editorial", subsets: ["latin"], display: "swap", weight: ["500", "600"] });

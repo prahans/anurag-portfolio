@@ -3,6 +3,9 @@ export type Project = {
   title: string;
   description: string;
   category: string;
+  date: string;
+  status?: string;
+  demoLabel?: string;
   technologies: string[];
   image: string;
   imageAlt: string;
@@ -13,43 +16,41 @@ export type Project = {
   accent: "lime" | "orange" | "pink";
 };
 
-// These are configurable content placeholders, not claims about completed work.
-// Add real screenshots and URLs, then set provisional to false when ready.
+// Only real projects are listed. Dates reflect GitHub repository activity.
+// Add other work here once its screenshot, details, and links are ready.
 export const projects: Project[] = [
   {
-    id: "developer-toolkit",
-    title: "Developer Toolkit",
-    description: "A place for tools that make building for the web a little easier.",
-    category: "Developer tools",
-    technologies: ["Next.js", "TypeScript"],
-    image: "/images/projects/developer-tools.svg",
-    imageAlt: "Illustrative concept of a code editor, not a finished application",
+    id: "patchverdict",
+    title: "PatchVerdict",
+    description: "AI can suggest a fix, but how do you know it works? PatchVerdict investigates bugs, tests candidate repairs in a sandbox, and makes the evidence behind each verdict easier to inspect.",
+    category: "AI · Developer tools",
+    date: "Sep–Oct 2026",
+    status: "Read-only showcase",
+    demoLabel: "Live showcase",
+    technologies: ["TypeScript", "Next.js", "E2B"],
+    image: "/images/screenshots/patchVerdict.png",
+    imageAlt: "Screenshot of the PatchVerdict web application",
+    githubUrl: "https://github.com/prahans/patch-verdict",
+    liveUrl: "https://patchverdict.duckdns.org/",
     featured: true,
-    provisional: true,
+    provisional: false,
     accent: "lime",
   },
   {
-    id: "everyday-web",
-    title: "Everyday Web",
-    description: "A space for useful web experiences built around everyday needs.",
-    category: "Full-stack · Web",
-    technologies: ["React", "Supabase"],
-    image: "/images/projects/everyday-web.svg",
-    imageAlt: "Illustrative concept of a nature-inspired website, not a finished application",
+    id: "repo-explain",
+    title: "RepoExplain",
+    description: "A friendlier starting point for unfamiliar codebases. Paste a public GitHub repository to explore its stack, important files, and architecture through structured, streaming AI explanations.",
+    category: "AI · Code exploration",
+    date: "Sep 2026",
+    status: "Public beta",
+    demoLabel: "Try it live",
+    technologies: ["Next.js", "TypeScript", "MongoDB"],
+    image: "/images/screenshots/repoExplain.png",
+    imageAlt: "Screenshot of the RepoExplain web application",
+    githubUrl: "https://github.com/prahans/repo-explain",
+    liveUrl: "https://repo-explain-gamma.vercel.app/",
     featured: true,
-    provisional: true,
+    provisional: false,
     accent: "orange",
-  },
-  {
-    id: "clearer-picture",
-    title: "A Clearer Picture",
-    description: "A place to explore simple ways of making complex information useful.",
-    category: "Data · Interfaces",
-    technologies: ["React", "Node.js"],
-    image: "/images/projects/useful-data.svg",
-    imageAlt: "Illustrative concept of a data dashboard, not a finished application",
-    featured: true,
-    provisional: true,
-    accent: "pink",
   },
 ];

@@ -9,8 +9,8 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("I build digital experiences that make life a little better.");
-    await expect(page.locator(".project-card")).toHaveCount(3);
-    await expect(page.locator(".project-links a")).toHaveCount(0);
+    await expect(page.locator(".project-card")).toHaveCount(2);
+    await expect(page.locator(".project-links a")).toHaveCount(4);
     await expect(page.locator(".skill-item")).toHaveCount(12);
     for (const id of ["work", "about", "skills", "contact"]) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();
@@ -97,7 +97,7 @@ test("essential content and anchor links work without JavaScript", async ({ brow
   await page.getByRole("link", { name: "Explore My Work" }).click();
   await expect(page).toHaveURL(/#work$/);
   await expect(page.locator("#work")).toBeInViewport();
-  await expect(page.locator(".project-card")).toHaveCount(3);
+  await expect(page.locator(".project-card")).toHaveCount(2);
   await context.close();
 });
 
@@ -164,4 +164,28 @@ test("failed clipboard access does not falsely report copied", async ({ page }) 
   await expect(copy).toHaveAttribute("data-status", "error");
   await expect(page.getByRole("status")).toContainText("Copy was blocked");
   await expect(copy).toHaveAttribute("data-tooltip", "Couldn\'t copy");
+});
+
+test("featured work shows real projects with screenshots, dates and links", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#work");
+    const cards = page.locator(".project-card");
+    await expect(cards).toHaveCount(2);
+    const expected = [
+      { title: "PatchVerdict", date: "Sep–Oct 2026", screenshot: "patchVerdict.png", source: "https://github.com/prahans/patch-verdict", demo: "https://patchverdict.duckdns.org/" },
+      { title: "RepoExplain", date: "Sep 2026", screenshot: "repoExplain.png", source: "https://github.com/prahans/repo-explain", demo: "https://repo-explain-gamma.vercel.app/" },
+    ];
+    for (const [index, project] of expected.entries()) {
+      const card = cards.nth(index);
+      await expect(card.getByRole("heading", { name: project.title })).toBeVisible();
+      await expect(card.locator(".project-date")).toHaveText(project.date);
+      await expect(card.locator(".project-visual img")).toHaveAttribute("src", new RegExp(project.screenshot));
+      await expect(card.locator(".project-visual img")).toBeVisible();
+      await expect(card.locator(`a[href="${project.source}"]`)).toBeVisible();
+      await expect(card.locator(`a[href="${project.demo}"]`)).toBeVisible();
+      await expect(card.locator(".project-status")).not.toContainText("Concept placeholder");
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  }
 });

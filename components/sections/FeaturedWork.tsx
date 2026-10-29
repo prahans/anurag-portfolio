@@ -12,7 +12,7 @@ export function FeaturedWork() {
           <SectionHeading number="02" title="Featured Work" id="work-heading" />
           <MoveRight className="heading-arrow" size={37} strokeWidth={1} aria-hidden="true" />
           <p>A few things I&apos;ve been building, exploring,<br className="desktop-break" /> and learning along the way.</p>
-          <span className="work-note">A little work in progress</span>
+          <span className="work-note">A little more to come</span>
         </Reveal>
         <div className="project-grid">
           {projects.filter((project) => project.featured).map((project, index) => (
