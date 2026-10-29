@@ -72,7 +72,16 @@
 .contact-button:hover { background: #283343; transform: translateY(-2px); }
 .contact-button > svg:last-child { margin-left: auto; transition: transform 180ms ease; flex-shrink: 0; }
 .contact-button:hover > svg:last-child { transform: translate(2px, -2px); }
+.contact-email-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; gap: 10px; }
 .contact-button--email { justify-content: flex-start; width: 100%; padding: 13px 16px; min-height: 63px; }
+.contact-copy-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 80px; min-height: 63px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 8px; background: #faf9f5; color: var(--ink); font-size: 12px; font-weight: 600; transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease, transform 180ms ease; }
+.contact-copy-button:hover { border-color: var(--cobalt); color: var(--cobalt); transform: translateY(-2px); }
+.contact-copy-button[data-status="copied"] { border-color: #93bb99; color: #25603f; background: #f5faf3; }
+.contact-copy-button[data-status="error"] { border-color: #b98a70; color: #985337; }
+.contact-copy-button svg { flex-shrink: 0; }
+.contact-copy-feedback { grid-column: 1 / -1; font-size: 11px; line-height: 1.5; }
+.contact-copy-feedback--error { color: #985337; }
+
 .contact-button-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 2px; line-height: 1.4; }
 .contact-button-copy strong { font-size: 12px; font-weight: 650; }
 .contact-button-copy > span { font-size: 11px; color: #d6dbe5; overflow-wrap: anywhere; }
@@ -180,7 +189,7 @@
   .footer-location { order: 3; flex-basis: 100%; font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .project-card, .project-visual img, .project-links a, .project-links svg, .skill-tile, .contact-button, .contact-button > svg:last-child, .contact-social-link, .contact-social-link > svg:last-child, .contact-phone-link, .back-to-top { transition: none; }
-  .project-card:hover, .skill-item:hover .skill-tile, .contact-button:hover, .contact-social-link:hover, .back-to-top:hover, .project-links a:hover svg, .contact-button:hover > svg:last-child, .contact-social-link:hover > svg:last-child { transform: none; }
+  .project-card, .project-visual img, .project-links a, .project-links svg, .skill-tile, .contact-button, .contact-copy-button, .contact-button > svg:last-child, .contact-social-link, .contact-social-link > svg:last-child, .contact-phone-link, .back-to-top { transition: none; }
+  .project-card:hover, .skill-item:hover .skill-tile, .contact-button:hover, .contact-copy-button:hover, .contact-social-link:hover, .back-to-top:hover, .project-links a:hover svg, .contact-button:hover > svg:last-child, .contact-social-link:hover > svg:last-child { transform: none; }
   .project-card:hover .project-visual img { transform: rotate(-8deg); }
 }

@@ -1,6 +1,7 @@
 import { ArrowUpRight, Mail, Phone } from "lucide-react";
 import { LinkedInIcon } from "@/components/ui/LinkedInIcon";
 import { GitHubIcon } from "@/components/ui/GitHubIcon";
+import { CopyEmailButton } from "@/components/ui/CopyEmailButton";
 import { site } from "@/data/site";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -17,14 +18,17 @@ export function Contact() {
               <p>{site.contact}</p>
               <div className="contact-actions" aria-label="Ways to connect">
                 {site.email && (
-                  <a className="contact-button contact-button--email" href={`mailto:${site.email}`}>
-                    <Mail size={19} aria-hidden="true" />
-                    <span className="contact-button-copy">
-                      <strong>Send me an email</strong>
-                      <span>{site.email}</span>
-                    </span>
-                    <ArrowUpRight size={17} aria-hidden="true" />
-                  </a>
+                  <div className="contact-email-actions">
+                    <a className="contact-button contact-button--email" href={`mailto:${site.email}`}>
+                      <Mail size={19} aria-hidden="true" />
+                      <span className="contact-button-copy">
+                        <strong>Open email app</strong>
+                        <span>{site.email}</span>
+                      </span>
+                      <ArrowUpRight size={17} aria-hidden="true" />
+                    </a>
+                    <CopyEmailButton email={site.email} />
+                  </div>
                 )}
                 <div className="contact-socials">
                   {site.github && (

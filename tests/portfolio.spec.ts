@@ -115,8 +115,45 @@ test("contact methods are visible and use valid email, phone, and social links",
     }
     await expect(phone).toContainText("+977 9707108983");
     await expect(linkedin).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(contact.getByRole("button", { name: "Copy email address" })).toBeVisible();
     await expect(linkedin).toContainText("LinkedIn");
     await expect(github).toHaveAttribute("rel", "noopener noreferrer");
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
   }
+});
+
+test("visitors can copy the email address without opening an email application", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText: async (value: string) => {
+          (window as Window & { __copiedEmail?: string }).__copiedEmail = value;
+        },
+      },
+    });
+  });
+  await page.goto("/#contact");
+  const copy = page.getByRole("button", { name: "Copy email address" });
+  await copy.click();
+  await expect(copy).toContainText("Copied!");
+  await expect(copy).toHaveAttribute("data-status", "copied");
+  expect(await page.evaluate(() => (window as Window & { __copiedEmail?: string }).__copiedEmail)).toBe("prahanspanuhar4@gmail.com");
+  await expect(page.locator("#contact a[href='mailto:prahanspanuhar4@gmail.com']")).toBeVisible();
+});
+
+test("failed clipboard access does not falsely report copied", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText: async () => { throw new Error("Clipboard permission blocked"); } },
+    });
+    document.execCommand = () => false;
+  });
+  await page.goto("/#contact");
+  const copy = page.getByRole("button", { name: "Copy email address" });
+  await copy.click();
+  await expect(copy).toHaveAttribute("data-status", "error");
+  await expect(page.getByRole("status")).toContainText("Copy was blocked");
+  await expect(copy).not.toContainText("Copied!");
 });
