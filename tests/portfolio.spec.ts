@@ -115,6 +115,7 @@ test("contact methods are visible and use valid email, phone, and social links",
     }
     await expect(phone).toContainText("+977 9707108983");
     await expect(linkedin).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(linkedin).toContainText("LinkedIn");
     await expect(github).toHaveAttribute("rel", "noopener noreferrer");
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
   }

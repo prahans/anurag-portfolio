@@ -1,4 +1,5 @@
-import { ArrowUpRight, Linkedin, Mail, Phone } from "lucide-react";
+import { ArrowUpRight, Mail, Phone } from "lucide-react";
+import { LinkedInIcon } from "@/components/ui/LinkedInIcon";
 import { GitHubIcon } from "@/components/ui/GitHubIcon";
 import { site } from "@/data/site";
 import { Reveal } from "@/components/ui/Reveal";
@@ -35,7 +36,7 @@ export function Contact() {
                   )}
                   {site.linkedin && (
                     <a className="contact-social-link" href={site.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in a new tab)">
-                      <Linkedin size={18} aria-hidden="true" />
+                      <LinkedInIcon size={18} />
                       <span>LinkedIn</span>
                       <ArrowUpRight size={15} aria-hidden="true" />
                     </a>
