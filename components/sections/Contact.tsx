@@ -22,7 +22,7 @@ export function Contact() {
                     <a className="contact-button contact-button--email" href={`mailto:${site.email}`}>
                       <Mail size={19} aria-hidden="true" />
                       <span className="contact-button-copy">
-                        <strong>Open email app</strong>
+                        <strong>Drop me a note</strong>
                         <span>{site.email}</span>
                       </span>
                       <ArrowUpRight size={17} aria-hidden="true" />
