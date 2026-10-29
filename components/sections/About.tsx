@@ -18,7 +18,7 @@ export function About() {
         <div className="about-content">
           <div className="about-copy">
             <p>{site.about}</p>
-            <span className="about-note">A curious mind. A cup of chai.</span>
+            <span className="about-note">A curious mind. Fueled by coffee.</span>
           </div>
           <ul className="personality-grid">
             {traits.map(({ title, text, icon: Icon, tone }) => (

@@ -27,7 +27,7 @@ export function HeroArtwork() {
         <Image src={site.heroCharacterSrc} alt={site.heroCharacterAlt} fill sizes="(max-width: 600px) 100vw, (max-width: 999px) 80vw, 720px" loading="eager" fetchPriority="high" className="character-image" />
       </div>
       <div className="art-note art-note-right" aria-hidden="true">A little curiosity.<br />A lot of possibilities.<svg viewBox="0 0 72 70"><path d="M61 7 C76 46 44 63 14 46 M16 61 L12 44 L29 43" /></svg></div>
-      <span className="artwork-caption">MADE OF CURIOSITY &amp; A LITTLE CHAI</span>
+      <span className="artwork-caption">MADE OF CURIOSITY &amp; A LITTLE COFFEE</span>
     </div>
   );
 }
