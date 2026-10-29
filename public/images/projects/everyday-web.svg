@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="330" viewBox="0 0 420 330" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Everyday web concept illustration</title>
+  <desc id="desc">An original warm travel interface illustration with abstract mountains and a cabin. A placeholder concept, not a finished application screenshot.</desc>
+  <rect x="1" y="1" width="418" height="328" rx="17" fill="#101922" stroke="#344149" stroke-width="2"/>
+  <path d="M1 38H419" stroke="#2B3740"/>
+  <circle cx="19" cy="20" r="3" fill="#FFADCC"/><circle cx="31" cy="20" r="3" fill="#E4FF85"/><circle cx="43" cy="20" r="3" fill="#8BCBC2"/>
+  <rect x="125" y="13" width="173" height="14" rx="4" fill="#1C2832"/>
+  <text x="143" y="23" fill="#91A5AC" font-family="monospace" font-size="7" letter-spacing="1.2">THOUGHTFULLY CONNECTED</text>
+  <rect x="17" y="51" width="386" height="262" rx="7" fill="#EDE7D9"/>
+  <text x="33" y="73" fill="#5D665E" font-family="monospace" font-size="8" letter-spacing="1.6">CONCEPT / 02</text>
+  <path d="M334 69H352M362 69H386" stroke="#92998F" stroke-width="3" stroke-linecap="round"/>
+  <path d="M17 145L75 103L113 134L164 93L223 153L272 102L344 156L403 129V313H17V145Z" fill="#B8BDA8"/>
+  <path d="M116 136L164 93L198 128L177 120L164 108L151 124L140 122L116 136Z" fill="#F8F5E8"/>
+  <path d="M232 144L272 102L307 134L285 126L274 115L263 129L255 126L232 144Z" fill="#E9EBDB"/>
+  <path d="M17 191L76 164L139 183L205 150L274 189L338 161L403 190V313H17V191Z" fill="#879B85"/>
+  <path d="M17 248L99 209L179 228L269 195L334 220L403 203V313H17V248Z" fill="#536E5B"/>
+  <path d="M267 216L320 171L374 216" fill="#3C4E45"/>
+  <path d="M277 214L320 179L363 214V262H277V214Z" fill="#8E6950"/>
+  <path d="M289 217H313V251H289V217Z" fill="#EEC48B"/>
+  <path d="M323 217H348V238H323V217Z" fill="#F4D2A1"/>
+  <path d="M301 217V251M289 233H313M335 217V238" stroke="#74533F" stroke-width="2"/>
+  <path d="M270 263H370" stroke="#3C4E45" stroke-width="6" stroke-linecap="round"/>
+  <path d="M375 261V174M358 199L375 173L393 199H358ZM354 223L375 188L397 223H354ZM350 247L375 211L401 247H350Z" fill="#2E4A3C"/>
+  <text x="36" y="139" fill="#172C25" font-family="Georgia,serif" font-size="27">A little closer</text>
+  <text x="36" y="170" fill="#172C25" font-family="Georgia,serif" font-size="27">to everyday joy.</text>
+  <path d="M36 193H166M36 203H138" stroke="#455E4C" stroke-width="3" stroke-linecap="round"/>
+  <rect x="36" y="224" width="93" height="26" rx="4" fill="#F7F2E6"/>
+  <text x="49" y="241" fill="#385342" font-family="monospace" font-size="8" letter-spacing=".5">GO SOMEWHERE</text>
+  <rect x="36" y="275" width="222" height="23" rx="5" fill="#F4F1E6"/>
+  <circle cx="48" cy="287" r="3" stroke="#68806B"/>
+  <path d="M50 289L53 292M137 281V292M209 281V292" stroke="#A6AE9C"/>
+  <path d="M60 287H124M148 287H197" stroke="#A2AC99" stroke-width="3" stroke-linecap="round"/>
+  <path d="M229 287H245M241 283L245 287L241 291" stroke="#455F4B" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="330" viewBox="0 0 420 330" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Useful data concept illustration</title>
+  <desc id="desc">An original dashboard illustration with an abstract line chart and pastel data shapes without real financial metrics. A placeholder concept, not a finished application screenshot.</desc>
+  <rect x="1" y="1" width="418" height="328" rx="17" fill="#101922" stroke="#344149" stroke-width="2"/>
+  <path d="M1 38H419" stroke="#2B3740"/>
+  <circle cx="19" cy="20" r="3" fill="#FFADCC"/><circle cx="31" cy="20" r="3" fill="#E4FF85"/><circle cx="43" cy="20" r="3" fill="#8BCBC2"/>
+  <rect x="125" y="13" width="173" height="14" rx="4" fill="#1C2832"/>
+  <text x="140" y="23" fill="#91A5AC" font-family="monospace" font-size="7" letter-spacing="1">MAKING SENSE OF THINGS</text>
+  <path d="M62 39V329" stroke="#2A3742"/>
+  <rect x="19" y="57" width="26" height="25" rx="7" fill="#FFADCC"/>
+  <path d="M26 73V67M32 73V63M38 73V66" stroke="#483A4C" stroke-width="2.6" stroke-linecap="round"/>
+  <rect x="15" y="103" width="34" height="26" rx="6" fill="#213541"/>
+  <path d="M26 112H37M26 118H37" stroke="#8DC8CA" stroke-width="2" stroke-linecap="round"/>
+  <rect x="26" y="145" width="12" height="12" rx="3" stroke="#546B79"/>
+  <circle cx="32" cy="185" r="6" stroke="#546B79"/>
+  <path d="M26 215H38M26 221H35" stroke="#546B79" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="32" cy="300" r="9" fill="#304653"/>
+  <text x="82" y="66" fill="#D4ADC4" font-family="monospace" font-size="8" letter-spacing="1.6">CONCEPT / 03</text>
+  <text x="82" y="94" fill="#F3F1E9" font-family="Arial,sans-serif" font-size="21" font-weight="700">A clearer picture.</text>
+  <rect x="82" y="111" width="98" height="3" rx="1.5" fill="#5C7381"/>
+  <rect x="82" y="135" width="309" height="119" rx="8" fill="#17252F" stroke="#2D3E49"/>
+  <text x="96" y="153" fill="#A8BEC6" font-family="monospace" font-size="7" letter-spacing="1">ROOM TO EXPLORE</text>
+  <path d="M98 176H376M98 199H376M98 222H376" stroke="#263C48" stroke-dasharray="2 4"/>
+  <path d="M98 239V168M153 239V168M208 239V168M263 239V168M318 239V168M375 239V168" stroke="#223640"/>
+  <path d="M98 225L119 216L137 219L158 204L179 207L198 192L218 198L239 188L259 192L280 177L300 184L319 174L338 182L358 168L376 171" stroke="#8DCAC2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M98 230L119 227L137 230L158 222L179 225L198 217L218 221L239 207L259 215L280 209L300 214L319 202L338 204L358 194L376 196" stroke="#D79AB9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="280" cy="177" r="4" fill="#17252F" stroke="#8DCAC2" stroke-width="2"/>
+  <rect x="82" y="266" width="149" height="47" rx="7" fill="#192A34" stroke="#2B3D48"/>
+  <circle cx="102" cy="289" r="10" stroke="#72AFA5" stroke-width="4"/>
+  <path d="M102 279A10 10 0 0 1 112 289" stroke="#E4FF85" stroke-width="4" stroke-linecap="round"/>
+  <rect x="122" y="282" width="70" height="4" rx="2" fill="#A4BAC2"/>
+  <rect x="122" y="293" width="45" height="3" rx="1.5" fill="#526E7D"/>
+  <rect x="242" y="266" width="149" height="47" rx="7" fill="#192A34" stroke="#2B3D48"/>
+  <rect x="256" y="291" width="5" height="10" rx="1.5" fill="#FFADCC"/>
+  <rect x="265" y="284" width="5" height="17" rx="1.5" fill="#C98FAF"/>
+  <rect x="274" y="278" width="5" height="23" rx="1.5" fill="#9C799C"/>
+  <rect x="291" y="282" width="72" height="4" rx="2" fill="#A4BAC2"/>
+  <rect x="291" y="293" width="49" height="3" rx="1.5" fill="#526E7D"/>
+</svg>

@@ -1,0 +1,97 @@
+import { test, expect } from "@playwright/test";
+
+for (const width of [360, 390, 768, 1024, 1280, 1440]) {
+  test(`portfolio layout and assets at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("I build digital experiences that make life a little better.");
+    await expect(page.locator(".project-card")).toHaveCount(3);
+    await expect(page.locator(".project-links a")).toHaveCount(0);
+    await expect(page.locator(".skill-item")).toHaveCount(11);
+    for (const id of ["work", "about", "skills", "contact"]) {
+      await page.locator(`#${id}`).scrollIntoViewIfNeeded();
+      await expect(page.locator(`#${id}`)).toBeVisible();
+    }
+    const layout = await page.evaluate(() => ({
+      viewport: window.innerWidth,
+      documentWidth: document.documentElement.scrollWidth,
+      brokenImages: Array.from(document.images).filter((img) => !img.complete || img.naturalWidth === 0).map((img) => img.src),
+      emptyLinks: Array.from(document.links).filter((link) => !link.getAttribute("href") || link.getAttribute("href") === "#").length,
+      fonts: document.fonts.status,
+    }));
+    expect(layout.documentWidth).toBeLessThanOrEqual(layout.viewport);
+    expect(layout.brokenImages).toEqual([]);
+    expect(layout.emptyLinks).toBe(0);
+    expect(layout.fonts).toBe("loaded");
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    await expect(page.locator(".hero-art-reveal")).toHaveCSS("opacity", "1");
+    await expect(page.locator(".project-grid > div").last()).toHaveCSS("opacity", "1");
+    await page.screenshot({ path: `artifacts/portfolio-${width}.png`, fullPage: true, animations: "disabled" });
+    expect(errors).toEqual([]);
+  });
+}
+
+test("mobile navigation opens, supports keyboard dismissal, and follows anchors", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const menu = page.getByRole("button", { name: "Open navigation" });
+  await expect(page.getByRole("navigation", { name: "Primary navigation" })).toBeHidden();
+  await menu.click();
+  await expect(page.getByRole("navigation", { name: "Primary navigation" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeFocused();
+  await expect(menu).toHaveAttribute("aria-expanded", "false");
+  await menu.click();
+  await page.getByRole("navigation").getByRole("link", { name: "02. Work" }).click();
+  await expect(page).toHaveURL(/#work$/);
+  await expect(menu).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator("#work")).toBeInViewport();
+  await page.getByRole("navigation").getByRole("link", { name: "03. About" }).click();
+  await expect(page).toHaveURL(/#about$/);
+  await expect(page.getByRole("navigation").getByRole("link", { name: "03. About" })).toHaveAttribute("aria-current", "location");
+  await page.getByRole("navigation").getByRole("link", { name: "04. Skills" }).click();
+  await expect(page).toHaveURL(/#skills$/);
+  await expect(page.getByRole("navigation").getByRole("link", { name: "04. Skills" })).toHaveAttribute("aria-current", "location");
+  await page.getByRole("link", { name: "Back to top" }).click();
+  await expect(page).toHaveURL(/#home$/);
+  await expect(page.getByRole("heading", { level: 1 })).toBeInViewport();
+});
+
+test("desktop calls to action and active section follow their destinations", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await page.getByRole("link", { name: "Explore My Work" }).click();
+  await expect(page).toHaveURL(/#work$/);
+  await expect(page.locator("#work")).toBeInViewport();
+  await page.getByRole("link", { name: "Let’s Talk", exact: true }).click();
+  await expect(page).toHaveURL(/#contact$/);
+  await expect(page.locator("#contact")).toBeInViewport();
+  await expect(page.getByRole("navigation").getByRole("link", { name: "05. Contact" })).toHaveAttribute("aria-current", "location");
+  await expect(page.locator(".contact-actions a").first()).toHaveAttribute("href", "https://github.com/prahans");
+});
+
+test("reduced motion keeps all content visible and disables animated scrolling", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior)).toBe("auto");
+  expect(await page.locator(".headline-line").first().evaluate((el) => getComputedStyle(el).animationName)).toBe("none");
+  await page.getByRole("link", { name: "Explore My Work" }).click();
+  await expect(page.locator("#work")).toBeInViewport();
+});
+
+test("essential content and anchor links work without JavaScript", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  await page.goto(process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3100");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await page.getByRole("link", { name: "Explore My Work" }).click();
+  await expect(page).toHaveURL(/#work$/);
+  await expect(page.locator("#work")).toBeInViewport();
+  await expect(page.locator(".project-card")).toHaveCount(3);
+  await context.close();
+});

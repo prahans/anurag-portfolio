@@ -1,0 +1,25 @@
+// Personal details and optional actions live here. Unconfigured contact links stay hidden.
+export const site = {
+  name: "Anurag Panuhar",
+  role: "Full-Stack Developer",
+  location: "Nepal",
+  github: "https://github.com/prahans",
+  email: undefined as string | undefined,
+  linkedin: undefined as string | undefined,
+  resume: undefined as string | undefined,
+  heroCharacterSrc: "/images/hero/developer-v1.webp",
+  heroCharacterAlt: "Illustration of a young adult developer at a wooden desk with a laptop, books, a plant, and a cup of coffee.",
+  mountainImageSrc: "/images/hero/nepal-mountains.jpg",
+  greeting: "Hi there! I’m Anurag.",
+  introduction: "I’m a full-stack developer who enjoys turning ideas into useful, real-world products. I love working on projects that solve meaningful problems and bring a little more clarity, joy, and convenience to people’s everyday lives.",
+  about: "I’m a developer who genuinely enjoys creating things for the web. I like working on projects that solve real problems and make people’s lives a bit easier. When I’m not coding, you’ll probably find me exploring new ideas, learning something new, or enjoying a cup of chai.",
+  contact: "I’m always happy to connect, exchange ideas, or talk about interesting projects and opportunities.",
+};
+
+export const navigation = [
+  { id: "home", label: "Home", number: "01" },
+  { id: "work", label: "Work", number: "02" },
+  { id: "about", label: "About", number: "03" },
+  { id: "skills", label: "Skills", number: "04" },
+  { id: "contact", label: "Contact", number: "05" },
+] as const;
