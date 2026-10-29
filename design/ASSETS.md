@@ -34,3 +34,11 @@ Avoid: childish anime, chibi, exaggerated muscles, arrogant expression, plastic 
 ## Design reference
 
 `design/Warm Minimal Developer Portfolio.png` is retained as the approved visual reference. It is not used as a flattened page background or permanent cropped hero image.
+
+## Technology icons
+
+- Ten SVG marks are stored locally in `public/images/skills/`, from the [Devicon project](https://github.com/devicons/devicon/tree/master/icons).
+- Included marks: JavaScript, TypeScript, React, Next.js, Node.js, Tailwind CSS, MongoDB, Supabase, Git, and Visual Studio Code. Each corresponds to the original SVG in Devicon's matching icon directory (for example, `icons/react/react-original.svg`).
+- Devicon is distributed under the [MIT license](https://github.com/devicons/devicon/blob/master/LICENSE), retained in `public/images/skills/LICENSE.txt`. Brand marks remain the property of their respective owners and are used to identify technologies.
+- GitHub uses the local silhouette in `components/ui/GitHubIcon.tsx`.
+- Icons require no remote requests at runtime. Text marks remain configurable fallbacks for future entries without a local SVG.

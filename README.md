@@ -10,6 +10,8 @@ The application stays in the existing root-level App Router. The design referenc
 - Tailwind CSS v4 theme tokens plus component CSS
 - Motion for React for restrained, reduced-motion-aware reveals
 - Lucide React icons
+- Locally hosted technology brand SVGs and a shared GitHub icon
+- Playwright for responsive screenshots and navigation checks
 - `next/image` for local artwork and project images
 - `next/font/google`: Fraunces, Instrument Serif Italic, DM Sans, Caveat, and IBM Plex Mono
 
@@ -55,6 +57,10 @@ data/
 public/images/
   hero/                      Transparent illustration and Nepal photograph
   projects/                  Illustrative SVG concept previews
+  skills/                    Local technology icons and license
+tests/
+  portfolio.spec.ts          Responsive and interaction checks
+playwright.config.ts         Headless browser configuration
 design/
   Warm Minimal Developer Portfolio.png
   ASSETS.md                  Illustration prompt and photograph provenance
@@ -107,14 +113,25 @@ The generated figure is an illustrative representation, not Anurag's real photog
 
 ## Verification
 
-Final verification results will be recorded here after the implementation review. Required checks are ESLint, `tsc --noEmit`, and the production build. Browser review should cover 360, 390, 768, 1024, 1280, and 1440-pixel viewports, including navigation, image loading, typography, overflow, and reduced motion.
+Verified with `npm run lint`, `npx tsc --noEmit`, and `npm run build`. The production page also passes 10 Playwright checks covering 360, 390, 768, 1024, 1280, and 1440-pixel viewports, image loading, all five actual font families, horizontal overflow, mobile menu and Escape handling, anchor destinations, active navigation, reduced motion, and essential content with JavaScript disabled. No browser console errors were found. Desktop, tablet, and mobile screenshots were inspected against the approved reference.
+
+To reproduce browser checks, run a production server in one terminal, then the tests in another:
+
+```bash
+npm run build
+npm run start -- --hostname 127.0.0.1 --port 3100
+# In a second terminal:
+npm run test:e2e
+```
+
+Tests use a locally installed Chrome by default. Set `PLAYWRIGHT_CHANNEL=msedge` to use Edge, or install Chrome with `npx playwright install chrome` if necessary. Set `PLAYWRIGHT_BASE_URL` for a server at a different address. Successful full-page screenshots are saved in `artifacts/portfolio-{width}.png`; test artifacts are ignored by Git. The in-app preview browser was unavailable, so visual QA used headless Chrome.
 
 ## Current limitations
 
 - Project names, descriptions, technologies, and previews remain editable placeholders until real project content is supplied.
 - Only the supplied GitHub profile is configured; there is no contact form or email delivery backend.
 - The illustration is newly generated, so the pose and workspace details differ from the flattened reference. The character and desk objects are grouped within a single replaceable asset.
-- Skill marks use simple text fallbacks where a brand icon is not included; no proficiency claims are made.
+- Skills use local brand icons, with configurable text fallbacks for future entries; no proficiency claims are made.
 - Dark mode and an introduction video are omitted because neither is configured.
 - Fonts require network access on an uncached build. No runtime remote image service is required for the included local assets.
 

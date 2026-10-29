@@ -112,7 +112,7 @@ section { scroll-margin-top: 100px; }
 .mountain-print figcaption { display: flex; align-items: center; gap: 4px; padding: 8px 2px 0; font-family: var(--font-handwriting), cursive; font-size: 17px; line-height: 1; }
 .mountain-print svg { flex-shrink: 0; }
 .art-note { position: absolute; font-family: var(--font-handwriting), cursive; font-size: 24px; line-height: 1.05; z-index: 3; }
-.art-note-left { top: 210px; left: 2%; transform: rotate(-8deg); font-size: 22px; }
+.art-note-left { top: 35px; left: -9%; transform: rotate(-8deg); font-size: 22px; }
 .art-note-left > span { display: block; margin: 6px 0 0 66px; }
 .art-note svg { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; width: 62px; }
 .art-note-left svg { margin-top: -6px; margin-left: 31px; }
@@ -122,7 +122,7 @@ section { scroll-margin-top: 100px; }
 .workspace-note > span:not(.note-tape) { display: flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 8px; white-space: nowrap; margin-top: 10px; }
 .workspace-note svg { width: 12px; height: 12px; color: var(--cobalt); stroke-width: 1.6; flex-shrink: 0; }
 .workspace-note svg:last-child:not(:first-child) { width: 11px; color: #d0782d; fill: #ffbd5a; }
-.art-note-right { top: 208px; right: 0; font-size: 21px; transform: rotate(8deg); text-align: center; }
+.art-note-right { top: 180px; right: 0; font-size: 20px; transform: rotate(8deg); text-align: center; }
 .art-note-right svg { margin-left: 68px; width: 44px; }
 .artwork-caption { position: absolute; bottom: -8px; left: 36%; font-family: var(--font-mono); color: #737264; font-size: 8px; letter-spacing: 1.2px; }
 
@@ -148,13 +148,13 @@ section { scroll-margin-top: 100px; }
   .hero-actions .button { padding-inline: 15px; font-size: 12px; }
   .hero-highlights li { padding-inline: 13px; gap: 8px; }
   .hero-highlights li > span { font-size: 9px; }
-  .hero-artwork { width: calc(100% + 32px); left: 0; }
-  .character-slot { width: 125%; left: -13%; bottom: 22px; }
+  .hero-artwork { width: 100%; left: 0; }
+  .character-slot { width: 106%; left: -3%; bottom: 22px; }
   .mountain-print { width: 145px; left: 7%; top: 15px; }
   .mountain-print img { height: 97px; }
   .workspace-note { width: 180px; right: 0; }
   .workspace-note > span:not(.note-tape) { font-size: 7px; }
-  .art-note-left { top: 210px; left: 1%; font-size: 19px; }
+  .art-note-left { display: none; }
   .art-note-right { font-size: 19px; right: -1%; }
   .artwork-caption { left: 20%; }
 }
@@ -184,7 +184,7 @@ section { scroll-margin-top: 100px; }
   .mountain-print img { height: 104px; }
   .workspace-note { width: 190px; right: 3%; top: 15px; }
   .workspace-note > span:not(.note-tape) { font-size: 8px; }
-  .art-note-left { left: 2%; top: 210px; font-size: 21px; }
+  .art-note-left { display: block; left: 0; top: 188px; font-size: 21px; }
   .art-note-right { right: 1%; top: 205px; }
   .artwork-caption { left: 36%; bottom: -3px; }
 }

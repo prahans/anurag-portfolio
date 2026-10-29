@@ -22,11 +22,15 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
       brokenImages: Array.from(document.images).filter((img) => !img.complete || img.naturalWidth === 0).map((img) => img.src),
       emptyLinks: Array.from(document.links).filter((link) => !link.getAttribute("href") || link.getAttribute("href") === "#").length,
       fonts: document.fonts.status,
+      loadedFonts: Array.from(document.fonts).filter((font) => font.status === "loaded").map((font) => font.family),
     }));
     expect(layout.documentWidth).toBeLessThanOrEqual(layout.viewport);
     expect(layout.brokenImages).toEqual([]);
     expect(layout.emptyLinks).toBe(0);
     expect(layout.fonts).toBe("loaded");
+    for (const family of ["DM Sans", "Fraunces", "Instrument Serif", "Caveat", "IBM Plex Mono"]) {
+      expect(layout.loadedFonts).toContain(family);
+    }
     await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
     await expect(page.locator(".hero-art-reveal")).toHaveCSS("opacity", "1");
     await expect(page.locator(".project-grid > div").last()).toHaveCSS("opacity", "1");
@@ -50,12 +54,6 @@ test("mobile navigation opens, supports keyboard dismissal, and follows anchors"
   await expect(page).toHaveURL(/#work$/);
   await expect(menu).toHaveAttribute("aria-expanded", "false");
   await expect(page.locator("#work")).toBeInViewport();
-  await page.getByRole("navigation").getByRole("link", { name: "03. About" }).click();
-  await expect(page).toHaveURL(/#about$/);
-  await expect(page.getByRole("navigation").getByRole("link", { name: "03. About" })).toHaveAttribute("aria-current", "location");
-  await page.getByRole("navigation").getByRole("link", { name: "04. Skills" }).click();
-  await expect(page).toHaveURL(/#skills$/);
-  await expect(page.getByRole("navigation").getByRole("link", { name: "04. Skills" })).toHaveAttribute("aria-current", "location");
   await page.getByRole("link", { name: "Back to top" }).click();
   await expect(page).toHaveURL(/#home$/);
   await expect(page.getByRole("heading", { level: 1 })).toBeInViewport();
@@ -67,6 +65,12 @@ test("desktop calls to action and active section follow their destinations", asy
   await page.getByRole("link", { name: "Explore My Work" }).click();
   await expect(page).toHaveURL(/#work$/);
   await expect(page.locator("#work")).toBeInViewport();
+  await page.getByRole("navigation").getByRole("link", { name: "03. About" }).click();
+  await expect(page).toHaveURL(/#about$/);
+  await expect(page.getByRole("navigation").getByRole("link", { name: "03. About" })).toHaveAttribute("aria-current", "location");
+  await page.getByRole("navigation").getByRole("link", { name: "04. Skills" }).click();
+  await expect(page).toHaveURL(/#skills$/);
+  await expect(page.getByRole("navigation").getByRole("link", { name: "04. Skills" })).toHaveAttribute("aria-current", "location");
   await page.getByRole("link", { name: "Let’s Talk", exact: true }).click();
   await expect(page).toHaveURL(/#contact$/);
   await expect(page.locator("#contact")).toBeInViewport();
