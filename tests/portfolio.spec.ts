@@ -11,7 +11,7 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("I build digital experiences that make life a little better.");
     await expect(page.locator(".project-card")).toHaveCount(3);
     await expect(page.locator(".project-links a")).toHaveCount(0);
-    await expect(page.locator(".skill-item")).toHaveCount(11);
+    await expect(page.locator(".skill-item")).toHaveCount(12);
     for (const id of ["work", "about", "skills", "contact"]) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();
       await expect(page.locator(`#${id}`)).toBeVisible();

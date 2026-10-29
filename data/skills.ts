@@ -15,6 +15,7 @@ export const skills: Skill[] = [
   { name: "Node.js", mark: "node", color: "#438336", icon: "/images/skills/nodejs.svg" },
   { name: "Tailwind CSS", mark: "~", color: "#0597be", icon: "/images/skills/tailwindcss.svg" },
   { name: "MongoDB", mark: "M", color: "#168244", icon: "/images/skills/mongodb.svg" },
+  { name: "PostgreSQL", mark: "PG", color: "#336791", icon: "/images/skills/postgresql.svg" },
   { name: "Supabase", mark: "S", color: "#23996e", icon: "/images/skills/supabase.svg" },
   { name: "Git", mark: "git", color: "#e74c31", icon: "/images/skills/git.svg" },
   { name: "GitHub", mark: "GH", color: "#101522" },
