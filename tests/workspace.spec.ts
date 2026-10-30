@@ -368,6 +368,18 @@ test("sunlight dust drifts automatically with staggered, invisible loop resets",
     expect(item.infinite).toBe(true);
   }
 
+  // Size/opacity checks guard against an imperceptible configuration. Actual
+  // contrast against the illustration is still reviewed in browser screenshots.
+  const visibleCounts = await particles.evaluateAll((elements) => {
+    const animations = elements.map((element) => element.getAnimations()[0]);
+    animations.forEach((animation) => animation.pause());
+    return Array.from({ length: 21 }, (_, step) => {
+      animations.forEach((animation) => { animation.currentTime = step * 500; });
+      return elements.filter((element) => Number(getComputedStyle(element).opacity) >= .55).length;
+    });
+  });
+  for (const visibleCount of visibleCounts) expect(visibleCount).toBeGreaterThanOrEqual(2);
+
   const phases = await particles.evaluateAll((elements) => elements.map((element) => {
     const animation = element.getAnimations()[0];
     const { duration, delay = 0 } = animation.effect!.getTiming();
@@ -380,8 +392,8 @@ test("sunlight dust drifts automatically with staggered, invisible loop resets",
   }));
   for (const phase of phases) {
     expect(phase.start).toBeLessThan(.01);
-    expect(phase.middle).toBeGreaterThan(.1);
-    expect(phase.middle).toBeLessThan(.85);
+    expect(phase.middle).toBeGreaterThanOrEqual(.75);
+    expect(phase.middle).toBeLessThanOrEqual(.92);
     expect(phase.end).toBeLessThan(.01);
   }
 });
@@ -405,6 +417,7 @@ for (const width of [1440, 1280, 1024, 768, 390, 360]) {
       }
     }
 
+    const verticalPositions: number[][] = [];
     for (const progress of [.2, .5, .8]) {
       await visibleParticles.evaluateAll((elements, phase) => {
         for (const element of elements) {
@@ -416,10 +429,12 @@ for (const width of [1440, 1280, 1024, 768, 390, 360]) {
       }, progress);
       const image = (await page.locator(".workspace-image").boundingBox())!;
       const screen = (await page.locator(".workspace-hotspot--laptop").boundingBox())!;
+      const positions: number[] = [];
       for (const particle of await visibleParticles.all()) {
         const bounds = (await particle.boundingBox())!;
-        expect(bounds.width).toBeGreaterThan(0);
-        expect(bounds.width).toBeLessThan(8);
+        // These are CSS pixels at normal zoom, not the larger screenshot DPR.
+        expect(bounds.width).toBeGreaterThanOrEqual(width < 600 ? 4.5 : 5);
+        expect(bounds.width).toBeLessThanOrEqual(11);
         expect(bounds.x).toBeGreaterThanOrEqual(image.x);
         expect(bounds.y).toBeGreaterThanOrEqual(image.y);
         expect(bounds.x + bounds.width).toBeLessThanOrEqual(image.x + image.width);
@@ -429,7 +444,14 @@ for (const width of [1440, 1280, 1024, 768, 390, 360]) {
         const overlapsScreen = bounds.x < screen.x + screen.width && bounds.x + bounds.width > screen.x
           && bounds.y < screen.y + screen.height && bounds.y + bounds.height > screen.y;
         expect(overlapsScreen).toBe(false);
+        positions.push(bounds.y);
       }
+      verticalPositions.push(positions);
+    }
+    for (let index = 0; index < verticalPositions[0].length; index++) {
+      // A discernible upward journey, rather than a subpixel transform change.
+      const rise = verticalPositions[0][index] - verticalPositions[2][index];
+      expect(rise).toBeGreaterThanOrEqual(width < 600 ? 6 : 9);
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
 

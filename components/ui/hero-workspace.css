@@ -138,9 +138,11 @@
   @keyframes afternoon-light { 0% { opacity: .04; } 45% { opacity: .14; } 100% { opacity: .09; } }
   @keyframes sunlight-dust-drift {
     0% { transform: translate(0, 8px); opacity: 0; }
-    20% { opacity: calc(var(--dust-opacity) * .65); }
-    45% { transform: translate(var(--dust-sway), -4px); opacity: var(--dust-opacity); }
-    75% { opacity: calc(var(--dust-opacity) * .55); }
+    12% { opacity: calc(var(--dust-opacity) * .8); }
+    28% { opacity: var(--dust-opacity); }
+    45% { transform: translate(var(--dust-sway), -12px); }
+    65% { opacity: calc(var(--dust-opacity) * .92); }
+    85% { opacity: calc(var(--dust-opacity) * .7); }
     100% { transform: translate(var(--dust-drift), var(--dust-rise)); opacity: 0; }
   }
   @keyframes bulb-shadow-breathe {
@@ -182,6 +184,8 @@
 }
 
 @media (max-width: 599px) {
+  /* A legible 4.6–5px feathered silhouette at 360–390px, anchored to the image. */
+  .workspace-sunlight-particle { r: 8px; }
   /* Two motes keep the small workspace quiet; hidden ones do no animation. */
   .workspace-sunlight-particle:nth-of-type(n + 3) { display: none; animation: none; }
   /* Slightly more legible at small sizes, still scaling around its feet. */

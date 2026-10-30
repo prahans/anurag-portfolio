@@ -8,50 +8,50 @@ const motes = [
   {
     x: 966,
     y: 128,
-    radius: 3.1,
+    radius: 6.4,
     tone: "gold",
     duration: 11.3,
-    delay: -3.6,
-    sway: -3,
-    drift: 5,
-    rise: -23,
-    opacity: 0.62,
+    delay: -1.8,
+    sway: -5,
+    drift: 9,
+    rise: -34,
+    opacity: 0.86,
   },
   {
     x: 902,
-    y: 310,
-    radius: 3.7,
+    y: 285,
+    radius: 7.2,
     tone: "cream",
     duration: 13.7,
-    delay: -9.4,
-    sway: 4,
-    drift: -6,
-    rise: -18,
-    opacity: 0.68,
+    delay: -7.2,
+    sway: 7,
+    drift: -10,
+    rise: -36,
+    opacity: 0.9,
   },
   {
-    x: 738,
-    y: 226,
-    radius: 2.6,
-    tone: "cream",
+    x: 1030,
+    y: 321,
+    radius: 5.8,
+    tone: "gold",
     duration: 9.8,
-    delay: -1.7,
-    sway: -2,
-    drift: 7,
-    rise: -14,
-    opacity: 0.54,
+    delay: -4.3,
+    sway: -6,
+    drift: 8,
+    rise: -28,
+    opacity: 0.82,
   },
   {
     x: 1072,
     y: 494,
-    radius: 3.3,
+    radius: 6.8,
     tone: "cream",
     duration: 14.6,
-    delay: -6.5,
-    sway: -5,
-    drift: -3,
-    rise: -21,
-    opacity: 0.58,
+    delay: -11.6,
+    sway: 5,
+    drift: -7,
+    rise: -32,
+    opacity: 0.86,
   },
 ] as const;
 
@@ -90,14 +90,18 @@ export function WorkspaceSunlightParticles() {
     >
       <defs>
         <radialGradient id={`${gradientId}-gold`}>
-          <stop offset="0" stopColor="#fff1c9" />
-          <stop offset=".25" stopColor="#f4c76b" stopOpacity=".8" />
-          <stop offset="1" stopColor="#e8b96d" stopOpacity="0" />
+          <stop offset="0" stopColor="#bd873f" />
+          <stop offset=".2" stopColor="#cd9d50" />
+          <stop offset=".4" stopColor="#e8bf76" stopOpacity=".9" />
+          <stop offset=".64" stopColor="#fff1c9" stopOpacity=".4" />
+          <stop offset="1" stopColor="#fff1c9" stopOpacity="0" />
         </radialGradient>
         <radialGradient id={`${gradientId}-cream`}>
-          <stop offset="0" stopColor="#fff9e5" />
-          <stop offset=".3" stopColor="#fff1c9" stopOpacity=".85" />
-          <stop offset="1" stopColor="#f4c76b" stopOpacity="0" />
+          <stop offset="0" stopColor="#c29248" />
+          <stop offset=".2" stopColor="#ddb46c" />
+          <stop offset=".4" stopColor="#f4d99b" stopOpacity=".9" />
+          <stop offset=".64" stopColor="#fff6db" stopOpacity=".45" />
+          <stop offset="1" stopColor="#fff6db" stopOpacity="0" />
         </radialGradient>
       </defs>
       {motes.map((mote) => (
