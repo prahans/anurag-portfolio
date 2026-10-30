@@ -13,6 +13,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       </div>
       <div className="project-copy">
         <h3 id={`project-${project.id}`}>{project.title}</h3>
+        {project.handwrittenNote && <span className="project-handnote">{project.handwrittenNote}</span>}
         <p>{project.description}</p>
         {(project.status || project.provisional) && (
           <span className="project-status">{project.status ?? "Concept placeholder"}</span>

@@ -246,6 +246,49 @@ test("project typography is editorial, legible and responsive without changing c
   }
 });
 
+test("project cards pair editorial titles with restrained handwritten notes", async ({ page }) => {
+  for (const width of [360, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#work");
+    const cards = page.locator("#project-results .project-card");
+    await expect(cards).toHaveCount(8);
+    const notes = [
+      "Evidence first.",
+      "Find your way through code.",
+      "A little room to unwind.",
+      "Places worth finding.",
+      "A pin for every memory.",
+      "Learning the moving parts.",
+      "Behind the welcome.",
+      "Dinner starts here.",
+    ];
+    for (const [i, expectedNote] of notes.entries()) {
+      const card = cards.nth(i);
+      const title = card.getByRole("heading", { level: 3 });
+      const note = card.locator(".project-handnote");
+      await expect(note).toHaveText(expectedNote);
+      await expect(note).toBeVisible();
+      await expect(title).toHaveCSS("font-family", /Fraunces/);
+      await expect(note).toHaveCSS("font-family", /Caveat/);
+      const position = await card.evaluate((element) => {
+        const titleBox = element.querySelector("h3")!.getBoundingClientRect();
+        const noteBox = element.querySelector(".project-handnote")!.getBoundingClientRect();
+        const bodyBox = element.querySelector(".project-copy > p")!.getBoundingClientRect();
+        const cardBox = element.getBoundingClientRect();
+        return {
+          titleBeforeNote: titleBox.bottom <= noteBox.top + 3,
+          noteBeforeBody: noteBox.bottom <= bodyBox.top + 3,
+          noteWithinCard: noteBox.left >= cardBox.left && noteBox.right <= cardBox.right + 1,
+        };
+      });
+      expect(position.titleBeforeNote).toBe(true);
+      expect(position.noteBeforeBody).toBe(true);
+      expect(position.noteWithinCard).toBe(true);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  }
+});
+
 test("project dates use a readable warm accent without changing their content", async ({ page }) => {
   await page.goto("/#work");
   const firstDate = page.locator(".project-card .project-date").first();

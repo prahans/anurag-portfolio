@@ -26,7 +26,7 @@
 .featured-work .project-category { text-align: right; }
 .featured-work .project-copy { display: flex; flex-direction: column; align-items: flex-start; width: 60%; min-height: 284px; padding-top: 20px; }
 .featured-work .project-copy h3 {
-  margin-bottom: 12px;
+  margin-bottom: 9px;
   color: var(--ink);
   font-family: var(--font-editorial), Georgia, serif;
   font-size: 29px;
@@ -34,6 +34,22 @@
   line-height: 1.1;
   letter-spacing: -.9px;
   text-wrap: pretty;
+}
+/* Handwritten margin-note under each editorial project title. */
+.featured-work .project-handnote {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: -1px 0 10px 1px;
+  color: #7d5744;
+  font-family: var(--font-handwriting), cursive;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: .05px;
+  text-wrap: pretty;
+  transform: rotate(-1deg);
+  transform-origin: left center;
 }
 .featured-work .project-copy > p {
   max-width: 40ch;
@@ -62,6 +78,7 @@
   .featured-work .project-card { min-height: 392px; padding: 20px; }
   .featured-work .project-copy { width: 61%; min-height: 328px; }
   .featured-work .project-copy h3 { font-size: 25px; letter-spacing: -.75px; }
+  .featured-work .project-handnote { font-size: 19px; }
   .featured-work .project-copy > p { font-size: 12.5px; line-height: 1.65; }
   .featured-work .project-visual { width: 42%; top: 112px; right: -13px; }
 }
@@ -88,7 +105,8 @@
   .featured-work .project-category { font-size: 9px; }
   .featured-work .project-date { font-size: 9.5px; white-space: normal; }
   .featured-work .project-copy { width: 100%; min-height: 0; padding-top: 18px; }
-  .featured-work .project-copy h3 { font-size: clamp(26px, 7.2vw, 29px); margin-bottom: 10px; }
+  .featured-work .project-copy h3 { font-size: clamp(26px, 7.2vw, 29px); margin-bottom: 8px; }
+  .featured-work .project-handnote { font-size: 20px; margin-bottom: 9px; }
   .featured-work .project-copy > p { font-size: 13px; line-height: 1.7; max-width: 48ch; }
   .featured-work .project-status { margin-top: 10px; }
   .featured-work .project-tags { margin-top: 14px; }
