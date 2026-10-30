@@ -6,6 +6,7 @@ import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/reac
 import { site } from "@/data/site";
 import { WorkspacePanel } from "@/components/ui/WorkspacePanel";
 import { WorkspaceBird } from "@/components/ui/WorkspaceBird";
+import { WorkspaceBulbLight } from "@/components/ui/WorkspaceBulbLight";
 import "./hero-workspace.css";
 
 const subscribe = () => () => {};
@@ -99,6 +100,7 @@ export function HeroArtwork() {
             className="workspace-image"
           />
           <div className="workspace-sunlight" aria-hidden="true" />
+          <WorkspaceBulbLight />
           <WorkspaceBird />
           <div className="workspace-interactions" hidden={!hydrated}>
             <button type="button" className="workspace-hotspot workspace-hotspot--laptop" aria-label="Explore my workspace" aria-haspopup="dialog" onClick={(event) => openPanel("laptop", event)}>

@@ -334,6 +334,69 @@ test("bird responds to motion preferences and viewport changes without leaving o
   await expect.poll(animationCount).toBe(originalCount);
 });
 
+test("bulb and surrounding desk light breathe in synchronized opposite phases", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await openArtwork(page);
+
+  const light = page.locator(".workspace-bulb-light");
+  await expect(light).toHaveAttribute("aria-hidden", "true");
+  await expect(light).toHaveCSS("pointer-events", "none");
+  await expect(light.locator("span")).toHaveCount(4);
+
+  for (const selector of [".workspace-bulb-room-shade", ".workspace-bulb-glass-shade"]) {
+    await expect(page.locator(selector)).toHaveCSS("animation-name", "bulb-shadow-breathe");
+  }
+  for (const selector of [".workspace-bulb-room-glow", ".workspace-bulb-glass-glow"]) {
+    await expect(page.locator(selector)).toHaveCSS("animation-name", "bulb-light-breathe");
+  }
+
+  const phases = await light.evaluate((root) => {
+    const selectors = [
+      ".workspace-bulb-room-shade",
+      ".workspace-bulb-glass-shade",
+      ".workspace-bulb-room-glow",
+      ".workspace-bulb-glass-glow",
+    ];
+    const animations = root.getAnimations({ subtree: true });
+    const read = (time: number) => {
+      animations.forEach((animation) => {
+        animation.pause();
+        animation.currentTime = time;
+      });
+      return selectors.map((selector) =>
+        Number(getComputedStyle(root.querySelector(selector)!).opacity),
+      );
+    };
+    const dim = read(0);
+    const bright = read(4200);
+    animations.forEach((animation) => animation.play());
+    return { dim, bright, durations: animations.map((animation) => animation.effect?.getTiming().duration) };
+  });
+  expect(phases.durations).toEqual([8400, 8400, 8400, 8400]);
+  expect(phases.dim[0]).toBeGreaterThan(phases.bright[0]);
+  expect(phases.dim[1]).toBeGreaterThan(phases.bright[1]);
+  expect(phases.dim[2]).toBeLessThan(phases.bright[2]);
+  expect(phases.dim[3]).toBeLessThan(phases.bright[3]);
+
+  // The bulb overlay must share the source image coordinate system.
+  const center = await page.locator(".workspace-bulb-glass-glow").evaluate((element) => {
+    const image = document.querySelector(".workspace-image")!.getBoundingClientRect();
+    const glow = element.getBoundingClientRect();
+    return {
+      x: (glow.left + glow.width / 2 - image.left) / image.width,
+      y: (glow.top + glow.height / 2 - image.top) / image.height,
+    };
+  });
+  expect(center.x).toBeGreaterThan(0.300);
+  expect(center.x).toBeLessThan(0.315);
+  expect(center.y).toBeGreaterThan(0.560);
+  expect(center.y).toBeLessThan(0.585);
+
+  await page.getByRole("button", { name: "Explore my workspace", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Explore my workspace" })).toBeVisible();
+});
+
 test("coffee steam drifts continuously, without clicking or hovering the mug", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -412,6 +475,10 @@ test("reduced motion leaves the artwork static while interactions remain usable"
   await expect(page.locator(".mug-steam path").first()).toHaveCSS("animation-name", "none");
   await expect(page.locator(".workspace-laptop-glow")).toHaveCSS("animation-name", "none");
   await expect(page.locator(".workspace-laptop-cursor")).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".workspace-bulb-light")).toBeVisible();
+  for (const layer of await page.locator(".workspace-bulb-light > span").all()) {
+    await expect(layer).toHaveCSS("animation-name", "none");
+  }
   await expect(page.locator(".workspace-bird")).toBeVisible();
   await expectBirdOnBezel(page);
   expect(await page.locator(".workspace-bird-layer").evaluate((element) => element.getAnimations({ subtree: true }).length)).toBe(0);

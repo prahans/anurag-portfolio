@@ -31,6 +31,40 @@
 .workspace-bird-folded-wing { opacity: 1; }
 
 .workspace-sunlight { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 83% 12%, #fff2c3 0%, #ffe9b440 24%, transparent 61%); opacity: .09; mask-image: linear-gradient(to bottom, #000 65%, transparent 98%); }
+/* Local light anchored to the original bulb in the 1109 × 684 image:
+   glass center ≈ (340, 390), or (30.7%, 57.0%). The original bulb cannot
+   be switched off in a flattened picture; a shaded glass and nearby desk
+   glow dim and brighten in exact synchronization to suggest a real source. */
+.workspace-bulb-light { position: absolute; inset: 0; pointer-events: none; }
+.workspace-bulb-light > span { position: absolute; pointer-events: none; }
+.workspace-bulb-room-shade, .workspace-bulb-room-glow { inset: 0; }
+.workspace-bulb-room-shade {
+  background: radial-gradient(ellipse 23% 30% at 30.7% 57%,
+    #59402954 0%, #68452c31 34%, #68452c00 100%);
+  opacity: .25;
+}
+.workspace-bulb-room-glow {
+  background: radial-gradient(ellipse 27% 31% at 30.7% 57%,
+    #ffe4aa9c 0%, #ffcc8047 30%, #ffc77a0d 65%, transparent 100%);
+  mix-blend-mode: screen;
+  opacity: .48;
+}
+.workspace-bulb-glass-shade, .workspace-bulb-glass-glow {
+  left: 27.6%; top: 51.9%; width: 6.2%; height: 10.1%;
+  border-radius: 50%;
+}
+.workspace-bulb-glass-shade {
+  background: radial-gradient(circle at 51% 55%,
+    #7651318c 0%, #87613c7d 41%, #aa845333 66%, transparent 84%);
+  opacity: .27;
+}
+.workspace-bulb-glass-glow {
+  background: radial-gradient(circle at 49% 55%,
+    #fffcebaf 0%, #ffe7a085 31%, #ffd77c33 61%, transparent 85%);
+  mix-blend-mode: screen;
+  opacity: .48;
+}
+
 .workspace-interactions { position: absolute; inset: 0; pointer-events: none; }
 .workspace-interactions[hidden], .workspace-tooltip[hidden] { display: none; }
 .workspace-hotspot { position: absolute; display: block; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: auto; touch-action: manipulation; cursor: pointer; }
@@ -86,6 +120,9 @@
 @media (prefers-reduced-motion: no-preference) {
   .workspace-stage { animation: workspace-arrive .75s cubic-bezier(.22,1,.36,1) both; }
   .workspace-sunlight { animation: afternoon-light 9s ease-in-out 1 both; }
+  /* Both inverse shade/glow cycles use the same period and easing. */
+  .workspace-bulb-room-shade, .workspace-bulb-glass-shade { animation: bulb-shadow-breathe 8.4s ease-in-out infinite; }
+  .workspace-bulb-room-glow, .workspace-bulb-glass-glow { animation: bulb-light-breathe 8.4s ease-in-out infinite; }
   .workspace-laptop-glow { animation: laptop-screen-breathe 6s ease-in-out infinite; }
   .workspace-laptop-cursor { animation: laptop-caret-blink 1.4s steps(1, end) infinite; }
   .mug-steam path { animation: coffee-steam 3.1s ease-in-out infinite; }
@@ -93,6 +130,14 @@
   .mug-steam path:nth-child(3) { animation-delay: -2.1s; animation-duration: 2.9s; }
   @keyframes workspace-arrive { from { opacity: .2; transform: translateY(9px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes afternoon-light { 0% { opacity: .04; } 45% { opacity: .14; } 100% { opacity: .09; } }
+  @keyframes bulb-shadow-breathe {
+    0%, 100% { opacity: .68; }
+    50% { opacity: .03; }
+  }
+  @keyframes bulb-light-breathe {
+    0%, 100% { opacity: .12; }
+    50% { opacity: .72; }
+  }
   @keyframes laptop-screen-breathe {
     0%, 100% { opacity: .18; }
     50% { opacity: .48; }
@@ -109,6 +154,11 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .workspace-stage, .workspace-sunlight, .mug-steam path, .workspace-laptop-glow, .workspace-laptop-cursor { animation: none; }
+  .workspace-bulb-light > span { animation: none; }
+  .workspace-bulb-room-shade { opacity: .25; }
+  .workspace-bulb-glass-shade { opacity: .25; }
+  .workspace-bulb-room-glow { opacity: .46; }
+  .workspace-bulb-glass-glow { opacity: .46; }
   .workspace-laptop-glow { opacity: .23; }
   .workspace-laptop-cursor { opacity: .8; }
   .mug-steam path { opacity: .72; }
