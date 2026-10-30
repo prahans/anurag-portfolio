@@ -1,8 +1,31 @@
 ﻿/* The image and hotspots always share the same uncropped 1109 × 684 canvas. */
-.hero-artwork { position: absolute; width: calc(100% + 50px); height: 100%; top: 0; left: -12px; display: flex; flex-direction: column; justify-content: center; isolation: isolate; }
-.workspace-stage { position: relative; width: 100%; flex-shrink: 0; }
-.workspace-scene { position: relative; width: 100%; aspect-ratio: 1109 / 684; }
-.workspace-image { display: block; width: 100%; height: 100%; object-fit: contain; }
+.hero-artwork {
+  position: absolute;
+  width: calc(100% + 50px);
+  height: 100%;
+  top: 0;
+  left: -12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  isolation: isolate;
+}
+.workspace-stage {
+  position: relative;
+  width: 100%;
+  flex-shrink: 0;
+}
+.workspace-scene {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1109 / 684;
+}
+.workspace-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 /* Source-space feet anchor: (640, 258), on the sloping laptop bezel.
    The whole flight is clipped to the illustration, never over page content.
    Static styles are also the no-JS, mobile and reduced-motion fallback. */
@@ -13,181 +36,548 @@
   height: 100%;
   overflow: hidden;
   /* The image's feathered left margin slightly overlaps the headline. */
-  mask-image: linear-gradient(to right, transparent 5%, #000 9%, #000 97%, transparent);
+  mask-image: linear-gradient(
+    to right,
+    transparent 5%,
+    #000 9%,
+    #000 97%,
+    transparent
+  );
   pointer-events: none;
 }
-.workspace-bird-layer * { pointer-events: none; transform-box: view-box; }
-.workspace-bird { transform: translate(640px, 258px); }
-.workspace-bird-scale { transform: scale(.78); }
-.workspace-bird-pose, .workspace-bird-scale { transform-origin: 0 0; }
-.workspace-bird-shadow { opacity: .16; }
-.workspace-bird-body { transform-origin: 51px 55px; }
-.workspace-bird-head { transform-origin: 58px 34px; }
-.workspace-bird-eye { transform-origin: 66px 26.9px; }
-.workspace-bird-tail { transform-origin: 33px 47px; }
-.workspace-bird-feet { transform-origin: 53px 55px; }
-.workspace-bird-wing { transform-origin: 43px 36px; opacity: 0; }
-.workspace-bird-wingtip { transform-origin: 29px 19px; }
-.workspace-bird-folded-wing { opacity: 1; }
+.workspace-bird-layer * {
+  pointer-events: none;
+  transform-box: view-box;
+}
+.workspace-bird {
+  transform: translate(640px, 258px);
+}
+.workspace-bird-scale {
+  transform: scale(0.78);
+}
+.workspace-bird-pose,
+.workspace-bird-scale {
+  transform-origin: 0 0;
+}
+.workspace-bird-shadow {
+  opacity: 0.16;
+}
+.workspace-bird-body {
+  transform-origin: 51px 55px;
+}
+.workspace-bird-head {
+  transform-origin: 58px 34px;
+}
+.workspace-bird-eye {
+  transform-origin: 66px 26.9px;
+}
+.workspace-bird-tail {
+  transform-origin: 33px 47px;
+}
+.workspace-bird-feet {
+  transform-origin: 53px 55px;
+}
+.workspace-bird-wing {
+  transform-origin: 43px 36px;
+  opacity: 0;
+}
+.workspace-bird-wingtip {
+  transform-origin: 29px 19px;
+}
+.workspace-bird-folded-wing {
+  opacity: 1;
+}
 
-.workspace-sunlight { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 83% 12%, #fff2c3 0%, #ffe9b440 24%, transparent 61%); opacity: .09; mask-image: linear-gradient(to bottom, #000 65%, transparent 98%); }
+.workspace-sunlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 83% 12%,
+    #fff2c3 0%,
+    #ffe9b440 24%,
+    transparent 61%
+  );
+  opacity: 0.09;
+  mask-image: linear-gradient(to bottom, #000 65%, transparent 98%);
+}
 /* Tiny feathered circles share the source canvas. Only their transforms and
    opacity animate; the gradients provide soft edges without blur filters. */
-.workspace-sunlight-particles { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; }
-.workspace-sunlight-particle { pointer-events: none; opacity: 0; }
-.workspace-sunlight-particles[data-paused="true"] .workspace-sunlight-particle { animation-play-state: paused; }
+.workspace-sunlight-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.workspace-sunlight-particle {
+  pointer-events: none;
+  opacity: 0;
+}
+.workspace-sunlight-particles[data-paused="true"] .workspace-sunlight-particle {
+  animation-play-state: paused;
+}
 /* Local light anchored to the original bulb in the 1109 × 684 image:
    glass center ≈ (340, 390), or (30.7%, 57.0%). The original bulb cannot
    be switched off in a flattened picture; a shaded glass and nearby desk
    glow dim and brighten in exact synchronization to suggest a real source. */
-.workspace-bulb-light { position: absolute; inset: 0; pointer-events: none; }
-.workspace-bulb-light > span { position: absolute; pointer-events: none; }
-.workspace-bulb-room-shade, .workspace-bulb-room-glow { inset: 0; }
+.workspace-bulb-light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.workspace-bulb-light > span {
+  position: absolute;
+  pointer-events: none;
+}
+.workspace-bulb-room-shade,
+.workspace-bulb-room-glow {
+  inset: 0;
+}
 .workspace-bulb-room-shade {
-  background: radial-gradient(ellipse 23% 30% at 30.7% 57%,
-    #59402954 0%, #68452c31 34%, #68452c00 100%);
-  opacity: .25;
+  background: radial-gradient(
+    ellipse 23% 30% at 30.7% 57%,
+    #59402954 0%,
+    #68452c31 34%,
+    #68452c00 100%
+  );
+  opacity: 0.25;
 }
 .workspace-bulb-room-glow {
-  background: radial-gradient(ellipse 27% 31% at 30.7% 57%,
-    #ffe4aa9c 0%, #ffcc8047 30%, #ffc77a0d 65%, transparent 100%);
+  background: radial-gradient(
+    ellipse 27% 31% at 30.7% 57%,
+    #ffe4aa9c 0%,
+    #ffcc8047 30%,
+    #ffc77a0d 65%,
+    transparent 100%
+  );
   mix-blend-mode: screen;
-  opacity: .48;
+  opacity: 0.48;
 }
-.workspace-bulb-glass-shade, .workspace-bulb-glass-glow {
-  left: 27.6%; top: 51.9%; width: 6.2%; height: 10.1%;
+.workspace-bulb-glass-shade,
+.workspace-bulb-glass-glow {
+  left: 27.6%;
+  top: 51.9%;
+  width: 6.2%;
+  height: 10.1%;
   border-radius: 50%;
 }
 .workspace-bulb-glass-shade {
-  background: radial-gradient(circle at 51% 55%,
-    #7651318c 0%, #87613c7d 41%, #aa845333 66%, transparent 84%);
-  opacity: .27;
+  background: radial-gradient(
+    circle at 51% 55%,
+    #7651318c 0%,
+    #87613c7d 41%,
+    #aa845333 66%,
+    transparent 84%
+  );
+  opacity: 0.27;
 }
 .workspace-bulb-glass-glow {
-  background: radial-gradient(circle at 49% 55%,
-    #fffcebaf 0%, #ffe7a085 31%, #ffd77c33 61%, transparent 85%);
+  background: radial-gradient(
+    circle at 49% 55%,
+    #fffcebaf 0%,
+    #ffe7a085 31%,
+    #ffd77c33 61%,
+    transparent 85%
+  );
   mix-blend-mode: screen;
-  opacity: .48;
+  opacity: 0.48;
 }
 
-.workspace-interactions { position: absolute; inset: 0; pointer-events: none; }
-.workspace-interactions[hidden], .workspace-tooltip[hidden] { display: none; }
-.workspace-hotspot { position: absolute; display: block; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: auto; touch-action: manipulation; cursor: pointer; }
-.workspace-hotspot svg { width: 100%; height: 100%; fill: transparent; stroke: transparent; stroke-width: 1.5; transition: fill .2s ease, stroke .2s ease; }
-.workspace-hotspot polygon { vector-effect: non-scaling-stroke; }
-.workspace-hotspot:hover svg { fill: #fff7d614; stroke: #f7f5efa8; }
-.workspace-hotspot:focus-visible { outline: none; }
-.workspace-hotspot:focus-visible svg { fill: #315cf51a; stroke: #a8bdff; stroke-width: 3; }
+.workspace-interactions {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.workspace-interactions[hidden],
+.workspace-tooltip[hidden] {
+  display: none;
+}
+.workspace-hotspot {
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.workspace-hotspot svg {
+  width: 100%;
+  height: 100%;
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 1.5;
+  transition:
+    fill 0.2s ease,
+    stroke 0.2s ease;
+}
+.workspace-hotspot polygon {
+  vector-effect: non-scaling-stroke;
+}
+.workspace-hotspot:hover svg {
+  fill: #fff7d614;
+  stroke: #f7f5efa8;
+}
+.workspace-hotspot:focus-visible {
+  outline: none;
+}
+.workspace-hotspot:focus-visible svg {
+  fill: #315cf51a;
+  stroke: #a8bdff;
+  stroke-width: 3;
+}
 /* Source screen: (1056,388), (1426,366), (1466,579), (1093,609). */
-.workspace-hotspot--laptop { left: 35.26%; top: 39.47%; width: 36.97%; height: 35.53%; clip-path: polygon(0 9.06%, 90.24% 0, 100% 87.64%, 9% 100%); }
+.workspace-hotspot--laptop {
+  left: 35.26%;
+  top: 39.47%;
+  width: 36.97%;
+  height: 35.53%;
+  clip-path: polygon(0 9.06%, 90.24% 0, 100% 87.64%, 9% 100%);
+}
 /* Two decorative layers sit on top of the existing screen pixels; no extra
    image, canvas, timer or pointer event is needed. Coordinates track the source
    artwork just like the accessible laptop hotspot. */
-.workspace-laptop-effects { position: absolute; inset: 0; pointer-events: none; }
+.workspace-laptop-effects {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
 .workspace-laptop-glow {
   position: absolute;
-  left: 35.26%; top: 39.47%; width: 36.97%; height: 35.53%;
+  left: 35.26%;
+  top: 39.47%;
+  width: 36.97%;
+  height: 35.53%;
   clip-path: polygon(0 9.06%, 90.24% 0, 100% 87.64%, 9% 100%);
-  background: radial-gradient(ellipse at 23% 67%, #6ec2fa35 0%, #315cf51c 43%, transparent 77%);
+  background: radial-gradient(
+    ellipse at 23% 67%,
+    #6ec2fa35 0%,
+    #315cf51c 43%,
+    transparent 77%
+  );
   mix-blend-mode: screen;
-  opacity: .26;
+  opacity: 0.26;
 }
 .workspace-laptop-cursor {
   position: absolute;
-  left: 44.8%; top: 65.3%; width: max(1px, .16%); height: 2.05%;
+  left: 44.8%;
+  top: 65.3%;
+  width: max(1px, 0.16%);
+  height: 2.05%;
   background: #a8f5dc;
   border-radius: 1px;
   box-shadow: 0 0 4px #88ebc9a6;
   transform: rotate(-5deg);
-  opacity: .8;
+  opacity: 0.8;
 }
-.workspace-hotspot--laptop:is(:hover, :focus-visible) ~ .workspace-laptop-effects .workspace-laptop-glow {
+.workspace-hotspot--laptop:is(:hover, :focus-visible)
+  ~ .workspace-laptop-effects
+  .workspace-laptop-glow {
   filter: brightness(1.35);
 }
 /* Notebook and mug rectangles are normalized against the same source crop. */
-.workspace-hotspot--notebook { left: 15.51%; top: 76.02%; width: 27.5%; height: 16.38%; clip-path: polygon(0 22.34%, 51.16% 0, 100% 73.2%, 26.55% 100%); }
-.workspace-hotspot--mug { left: 80.1%; top: 57.4%; width: 14.5%; height: 18.5%; border-radius: 26% 39% 32% 30%; transition: box-shadow .2s ease, background .2s ease; }
-.workspace-hotspot--mug:hover { background: #fff7d612; box-shadow: inset 0 0 0 1px #f7f5ef75; }
-.workspace-hotspot--mug:focus-visible { background: #315cf51a; box-shadow: inset 0 0 0 2px #a8bdff; }
-.workspace-tooltip { position: absolute; z-index: 4; width: max-content; max-width: calc(100% - 24px); padding: 7px 11px; border: 1px solid #d9d6c8; border-radius: 7px; background: #fffcf2; color: var(--ink); font-family: var(--font-body), sans-serif; font-size: 11px; font-weight: 500; line-height: 1.4; box-shadow: 0 3px 12px #33291812; pointer-events: none; }
-.workspace-tooltip--laptop, .workspace-tooltip--notebook { opacity: 0; visibility: hidden; transform: translate(-50%, -100%) translateY(3px); transition: opacity .18s ease, transform .18s ease, visibility .18s ease; }
-.workspace-tooltip--laptop { left: 53%; top: 38%; }
-.workspace-tooltip--notebook { left: 29%; top: 75%; }
-.workspace-hotspot:hover + .workspace-tooltip, .workspace-hotspot:focus-visible + .workspace-tooltip { opacity: 1; visibility: visible; transform: translate(-50%, -100%) translateY(0); }
-.workspace-tooltip--mug { right: 2%; top: 52%; transform: translateY(-100%); }
-.mug-steam { position: absolute; left: 81.7%; top: 44.5%; width: 7.2%; height: 13.2%; overflow: visible; pointer-events: none; opacity: .94; }
-.mug-steam path { stroke: #f7f0e1; stroke-width: 2.4; stroke-linecap: round; filter: drop-shadow(0 0 2px #75634fa8); }
-@media (max-width: 1199px) { .hero-artwork { width: 100%; left: 0; } }
+.workspace-hotspot--notebook {
+  left: 15.51%;
+  top: 76.02%;
+  width: 27.5%;
+  height: 16.38%;
+  clip-path: polygon(0 22.34%, 51.16% 0, 100% 73.2%, 26.55% 100%);
+}
+.workspace-hotspot--mug {
+  left: 80.1%;
+  top: 57.4%;
+  width: 14.5%;
+  height: 18.5%;
+  border-radius: 26% 39% 32% 30%;
+  transition:
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+.workspace-hotspot--mug:hover {
+  background: #fff7d612;
+  box-shadow: inset 0 0 0 1px #f7f5ef75;
+}
+.workspace-hotspot--mug:focus-visible {
+  background: #315cf51a;
+  box-shadow: inset 0 0 0 2px #a8bdff;
+}
+.workspace-tooltip {
+  position: absolute;
+  z-index: 4;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  padding: 7px 11px;
+  border: 1px solid #d9d6c8;
+  border-radius: 7px;
+  background: #fffcf2;
+  color: var(--ink);
+  font-family: var(--font-body), sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  box-shadow: 0 3px 12px #33291812;
+  pointer-events: none;
+}
+.workspace-tooltip--laptop,
+.workspace-tooltip--notebook {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -100%) translateY(3px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s ease;
+}
+.workspace-tooltip--laptop {
+  left: 53%;
+  top: 38%;
+}
+.workspace-tooltip--notebook {
+  left: 29%;
+  top: 75%;
+}
+.workspace-hotspot:hover + .workspace-tooltip,
+.workspace-hotspot:focus-visible + .workspace-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -100%) translateY(0);
+}
+.workspace-tooltip--mug {
+  right: 2%;
+  top: 52%;
+  transform: translateY(-100%);
+}
+.mug-steam {
+  position: absolute;
+  left: 81.7%;
+  top: 44.5%;
+  width: 7.2%;
+  height: 13.2%;
+  overflow: visible;
+  pointer-events: none;
+  opacity: 0.94;
+}
+.mug-steam path {
+  stroke: #f7f0e1;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 2px #75634fa8);
+}
+@media (max-width: 1199px) {
+  .hero-artwork {
+    width: 100%;
+    left: 0;
+  }
+}
 @media (max-width: 599px) {
-  .workspace-tooltip { font-size: 10px; padding: 6px 9px; }
-  .workspace-tooltip--notebook { left: 32%; }
+  .workspace-tooltip {
+    font-size: 10px;
+    padding: 6px 9px;
+  }
+  .workspace-tooltip--notebook {
+    left: 32%;
+  }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .workspace-stage { animation: workspace-arrive .75s cubic-bezier(.22,1,.36,1) both; }
-  .workspace-sunlight { animation: afternoon-light 9s ease-in-out 1 both; }
-  .workspace-sunlight-particle { animation: sunlight-dust-drift var(--dust-duration) ease-in-out var(--dust-delay) infinite both; }
+  .workspace-stage {
+    animation: workspace-arrive 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .workspace-sunlight {
+    animation: afternoon-light 9s ease-in-out 1 both;
+  }
+  .workspace-sunlight-particle {
+    animation: sunlight-dust-drift var(--dust-duration) ease-in-out
+      var(--dust-delay) infinite both;
+  }
   /* Both inverse shade/glow cycles use the same period and easing. */
-  .workspace-bulb-room-shade, .workspace-bulb-glass-shade { animation: bulb-shadow-breathe 8.4s ease-in-out infinite; }
-  .workspace-bulb-room-glow, .workspace-bulb-glass-glow { animation: bulb-light-breathe 8.4s ease-in-out infinite; }
-  .workspace-laptop-glow { animation: laptop-screen-breathe 6s ease-in-out infinite; }
-  .workspace-laptop-cursor { animation: laptop-caret-blink 1.4s steps(1, end) infinite; }
-  .mug-steam path { animation: coffee-steam 3.1s ease-in-out infinite; }
-  .mug-steam path:nth-child(2) { animation-delay: -1s; animation-duration: 3.5s; }
-  .mug-steam path:nth-child(3) { animation-delay: -2.1s; animation-duration: 2.9s; }
-  @keyframes workspace-arrive { from { opacity: .2; transform: translateY(9px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
-  @keyframes afternoon-light { 0% { opacity: .04; } 45% { opacity: .14; } 100% { opacity: .09; } }
+  .workspace-bulb-room-shade,
+  .workspace-bulb-glass-shade {
+    animation: bulb-shadow-breathe 8.4s ease-in-out infinite;
+  }
+  .workspace-bulb-room-glow,
+  .workspace-bulb-glass-glow {
+    animation: bulb-light-breathe 8.4s ease-in-out infinite;
+  }
+  .workspace-laptop-glow {
+    animation: laptop-screen-breathe 6s ease-in-out infinite;
+  }
+  .workspace-laptop-cursor {
+    animation: laptop-caret-blink 1.4s steps(1, end) infinite;
+  }
+  .mug-steam path {
+    animation: coffee-steam 3.1s ease-in-out infinite;
+  }
+  .mug-steam path:nth-child(2) {
+    animation-delay: -1s;
+    animation-duration: 3.5s;
+  }
+  .mug-steam path:nth-child(3) {
+    animation-delay: -2.1s;
+    animation-duration: 2.9s;
+  }
+  @keyframes workspace-arrive {
+    from {
+      opacity: 0.2;
+      transform: translateY(9px) scale(0.99);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  @keyframes afternoon-light {
+    0% {
+      opacity: 0.04;
+    }
+    45% {
+      opacity: 0.14;
+    }
+    100% {
+      opacity: 0.09;
+    }
+  }
   @keyframes sunlight-dust-drift {
-    0% { transform: translate(0, 8px); opacity: 0; }
-    12% { opacity: calc(var(--dust-opacity) * .8); }
-    28% { opacity: var(--dust-opacity); }
-    45% { transform: translate(var(--dust-sway), -12px); }
-    65% { opacity: calc(var(--dust-opacity) * .92); }
-    85% { opacity: calc(var(--dust-opacity) * .7); }
-    100% { transform: translate(var(--dust-drift), var(--dust-rise)); opacity: 0; }
+    0% {
+      transform: translate(0, 8px);
+      opacity: 0;
+    }
+    12% {
+      opacity: calc(var(--dust-opacity) * 0.8);
+    }
+    28% {
+      opacity: var(--dust-opacity);
+    }
+    45% {
+      transform: translate(var(--dust-sway), -12px);
+    }
+    65% {
+      opacity: calc(var(--dust-opacity) * 0.92);
+    }
+    85% {
+      opacity: calc(var(--dust-opacity) * 0.7);
+    }
+    100% {
+      transform: translate(var(--dust-drift), var(--dust-rise));
+      opacity: 0;
+    }
   }
   @keyframes bulb-shadow-breathe {
-    0%, 100% { opacity: .68; }
-    50% { opacity: .03; }
+    0%,
+    100% {
+      opacity: 0.68;
+    }
+    50% {
+      opacity: 0.03;
+    }
   }
   @keyframes bulb-light-breathe {
-    0%, 100% { opacity: .12; }
-    50% { opacity: .72; }
+    0%,
+    100% {
+      opacity: 0.12;
+    }
+    50% {
+      opacity: 0.72;
+    }
   }
   @keyframes laptop-screen-breathe {
-    0%, 100% { opacity: .18; }
-    50% { opacity: .48; }
+    0%,
+    100% {
+      opacity: 0.18;
+    }
+    50% {
+      opacity: 0.48;
+    }
   }
   @keyframes laptop-caret-blink {
-    0%, 51% { opacity: .85; }
-    52%, 100% { opacity: 0; }
+    0%,
+    51% {
+      opacity: 0.85;
+    }
+    52%,
+    100% {
+      opacity: 0;
+    }
   }
   @keyframes coffee-steam {
-    0%, 100% { transform: translate(0, 3px); opacity: .52; }
-    45% { transform: translate(1px, -2px); opacity: .94; }
-    75% { transform: translate(-1px, -5px); opacity: .7; }
+    0%,
+    100% {
+      transform: translate(0, 3px);
+      opacity: 0.52;
+    }
+    45% {
+      transform: translate(1px, -2px);
+      opacity: 0.94;
+    }
+    75% {
+      transform: translate(-1px, -5px);
+      opacity: 0.7;
+    }
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .workspace-sunlight-particles { display: none; }
-  .workspace-sunlight-particle { animation: none; }
-  .workspace-stage, .workspace-sunlight, .mug-steam path, .workspace-laptop-glow, .workspace-laptop-cursor { animation: none; }
-  .workspace-bulb-light > span { animation: none; }
-  .workspace-bulb-room-shade { opacity: .25; }
-  .workspace-bulb-glass-shade { opacity: .25; }
-  .workspace-bulb-room-glow { opacity: .46; }
-  .workspace-bulb-glass-glow { opacity: .46; }
-  .workspace-laptop-glow { opacity: .23; }
-  .workspace-laptop-cursor { opacity: .8; }
-  .mug-steam path { opacity: .72; }
-  .workspace-scene { transform: none !important; }
-  .workspace-hotspot, .workspace-hotspot svg, .workspace-tooltip { transition: none; }
+  .workspace-sunlight-particles {
+    display: none;
+  }
+  .workspace-sunlight-particle {
+    animation: none;
+  }
+  .workspace-stage,
+  .workspace-sunlight,
+  .mug-steam path,
+  .workspace-laptop-glow,
+  .workspace-laptop-cursor {
+    animation: none;
+  }
+  .workspace-bulb-light > span {
+    animation: none;
+  }
+  .workspace-bulb-room-shade {
+    opacity: 0.25;
+  }
+  .workspace-bulb-glass-shade {
+    opacity: 0.25;
+  }
+  .workspace-bulb-room-glow {
+    opacity: 0.46;
+  }
+  .workspace-bulb-glass-glow {
+    opacity: 0.46;
+  }
+  .workspace-laptop-glow {
+    opacity: 0.23;
+  }
+  .workspace-laptop-cursor {
+    opacity: 0.8;
+  }
+  .mug-steam path {
+    opacity: 0.72;
+  }
+  .workspace-scene {
+    transform: none !important;
+  }
+  .workspace-hotspot,
+  .workspace-hotspot svg,
+  .workspace-tooltip {
+    transition: none;
+  }
 }
 
 @media (max-width: 599px) {
   /* A legible 4.6–5px feathered silhouette at 360–390px, anchored to the image. */
-  .workspace-sunlight-particle { r: 8px; }
+  .workspace-sunlight-particle {
+    r: 8px;
+  }
   /* Two motes keep the small workspace quiet; hidden ones do no animation. */
-  .workspace-sunlight-particle:nth-of-type(n + 3) { display: none; animation: none; }
+  .workspace-sunlight-particle:nth-of-type(n + 3) {
+    display: none;
+    animation: none;
+  }
   /* Slightly more legible at small sizes, still scaling around its feet. */
-  .workspace-bird-scale { transform: scale(.9); }
+  .workspace-bird-scale {
+    transform: scale(0.9);
+  }
 }
