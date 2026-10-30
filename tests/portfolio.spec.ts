@@ -16,6 +16,16 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();
       await expect(page.locator(`#${id}`)).toBeVisible();
     }
+    // Visit every screenshot so the longer mobile project list loads its lazy images.
+    for (const image of await page.locator("img").all()) {
+      await image.scrollIntoViewIfNeeded();
+    }
+    await expect.poll(() => page.evaluate(() => Array.from(document.images)
+      .filter((image) => !image.complete || image.naturalWidth === 0)
+      .map((image) => image.currentSrc || image.src)), {
+      message: "All portfolio images should finish loading without errors",
+      timeout: 15_000,
+    }).toEqual([]);
     const layout = await page.evaluate(() => ({
       viewport: window.innerWidth,
       documentWidth: document.documentElement.scrollWidth,
@@ -143,7 +153,7 @@ test("visitors can copy the email address without opening an email application",
   await copy.click();
   await expect(copy).toHaveAttribute("data-tooltip", "Copied!");
   await expect(copy).toHaveAttribute("data-status", "copied");
-  await expect(page.getByRole("status")).toContainText("Email address copied to clipboard.");
+  await expect(page.locator("#contact").getByRole("status")).toContainText("Email address copied to clipboard.");
   await expect(copy).toHaveAttribute("data-status", "idle", { timeout: 5000 });
   await expect(copy).toHaveAttribute("data-tooltip", "Copy email address");
   expect(await page.evaluate(() => (window as Window & { __copiedEmail?: string }).__copiedEmail)).toBe("prahanspanuhar4@gmail.com");
@@ -162,7 +172,7 @@ test("failed clipboard access does not falsely report copied", async ({ page }) 
   const copy = page.getByRole("button", { name: "Copy email address" });
   await copy.click();
   await expect(copy).toHaveAttribute("data-status", "error");
-  await expect(page.getByRole("status")).toContainText("Copy was blocked");
+  await expect(page.locator("#contact").getByRole("status")).toContainText("Copy was blocked");
   await expect(copy).toHaveAttribute("data-tooltip", "Couldn\'t copy");
 });
 
@@ -323,7 +333,7 @@ test("featured work shows real projects with screenshots, dates and links", asyn
       await expect(card.locator(`a[href="${project.source}"]`)).toBeVisible();
       await expect(card.locator(`a[href="${project.demo}"]`)).toBeVisible();
       await expect(card.locator(`a[href="${project.demo}"]`)).toHaveAttribute("rel", "noopener noreferrer");
-      await expect(card.locator(".project-status")).not.toContainText("Concept placeholder");
+      await expect(card).not.toContainText("Concept placeholder");
     }
     await expect(cards.nth(5).locator(".project-status")).toHaveText("In development");
     await expect(cards.nth(4).locator(".project-tags")).toContainText("Leaflet");

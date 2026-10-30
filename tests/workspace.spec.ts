@@ -370,7 +370,7 @@ test("sunlight dust drifts automatically with staggered, invisible loop resets",
 
   const phases = await particles.evaluateAll((elements) => elements.map((element) => {
     const animation = element.getAnimations()[0];
-    const { duration, delay } = animation.effect!.getTiming();
+    const { duration, delay = 0 } = animation.effect!.getTiming();
     animation.pause();
     const read = (progress: number) => {
       animation.currentTime = Number(duration) * (1 + progress) + delay;
@@ -409,7 +409,7 @@ for (const width of [1440, 1280, 1024, 768, 390, 360]) {
       await visibleParticles.evaluateAll((elements, phase) => {
         for (const element of elements) {
           const animation = element.getAnimations()[0];
-          const { duration, delay } = animation.effect!.getTiming();
+          const { duration, delay = 0 } = animation.effect!.getTiming();
           animation.pause();
           animation.currentTime = Number(duration) * (1 + phase) + delay;
         }

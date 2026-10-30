@@ -42,10 +42,10 @@ const motes = [
     opacity: 0.54,
   },
   {
-    x: 960,
-    y: 575,
+    x: 1072,
+    y: 494,
     radius: 3.3,
-    tone: "gold",
+    tone: "cream",
     duration: 14.6,
     delay: -6.5,
     sway: -5,
