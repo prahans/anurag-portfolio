@@ -9,8 +9,8 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("I build digital experiences that make life a little better.");
-    await expect(page.locator(".project-card")).toHaveCount(4);
-    await expect(page.locator(".project-links a")).toHaveCount(8);
+    await expect(page.locator(".project-card")).toHaveCount(6);
+    await expect(page.locator(".project-links a")).toHaveCount(12);
     await expect(page.locator(".skill-item")).toHaveCount(12);
     for (const id of ["work", "about", "skills", "contact"]) {
       await page.locator(`#${id}`).scrollIntoViewIfNeeded();
@@ -97,7 +97,7 @@ test("essential content and anchor links work without JavaScript", async ({ brow
   await page.getByRole("link", { name: "Explore My Work" }).click();
   await expect(page).toHaveURL(/#work$/);
   await expect(page.locator("#work")).toBeInViewport();
-  await expect(page.locator(".project-card")).toHaveCount(4);
+  await expect(page.locator(".project-card")).toHaveCount(6);
   await context.close();
 });
 
@@ -171,12 +171,14 @@ test("featured work shows real projects with screenshots, dates and links", asyn
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/#work");
     const cards = page.locator(".project-card");
-    await expect(cards).toHaveCount(4);
+    await expect(cards).toHaveCount(6);
     const expected = [
       { title: "PatchVerdict", date: "Sep–Oct 2026", screenshot: "patchVerdict.png", source: "https://github.com/prahans/patch-verdict", demo: "https://patchverdict.duckdns.org/" },
       { title: "RepoExplain", date: "Sep 2026", screenshot: "repoExplain.png", source: "https://github.com/prahans/repo-explain", demo: "https://repo-explain-gamma.vercel.app/" },
       { title: "The Wild Oasis", date: "Sep 2026", screenshot: "the-wild-oasis-website.png", source: "https://github.com/prahans/The-wild-oasis-website", demo: "https://the-wild-oasis-website-zeta-puce.vercel.app/" },
       { title: "WanderLust", date: "Jan–Sep 2026", screenshot: "wanderlust.png", source: "https://github.com/prahans/wanderLust", demo: "https://wanderlust-okyq.onrender.com/listings" },
+      { title: "WorldWise", date: "Aug 2026", screenshot: "worldWise.png", source: "https://github.com/prahans/worldWise", demo: "https://world-wise-prahans1.vercel.app/" },
+      { title: "Stock Trading Platform", date: "Mar–Sep 2026", screenshot: "zerodha.png", source: "https://github.com/prahans/full-stack-stock-trading-platform", demo: "https://full-stack-stock-trading-platform-f.vercel.app/" },
     ];
     for (const [index, project] of expected.entries()) {
       const card = cards.nth(index);
@@ -190,6 +192,9 @@ test("featured work shows real projects with screenshots, dates and links", asyn
       await expect(card.locator(`a[href="${project.demo}"]`)).toHaveAttribute("rel", "noopener noreferrer");
       await expect(card.locator(".project-status")).not.toContainText("Concept placeholder");
     }
+    await expect(cards.nth(5).locator(".project-status")).toHaveText("Still in the making");
+    await expect(cards.nth(4).locator(".project-tags")).toContainText("Leaflet");
+    await expect(cards.nth(5).locator(".project-tags")).toContainText("MongoDB");
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
   }
 });
