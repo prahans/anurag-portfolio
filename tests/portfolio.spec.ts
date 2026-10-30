@@ -212,6 +212,40 @@ test("featured work filters the personal project collection with clear category 
   }
 });
 
+test("project typography is editorial, legible and responsive without changing cards", async ({ page }) => {
+  for (const width of [360, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#work");
+    const cards = page.locator(".project-card");
+    await expect(cards).toHaveCount(8);
+    const firstCard = cards.first();
+    const typography = await firstCard.evaluate((card) => {
+      const title = getComputedStyle(card.querySelector("h3")!);
+      const body = getComputedStyle(card.querySelector(".project-copy > p")!);
+      const date = getComputedStyle(card.querySelector(".project-date")!);
+      const tag = getComputedStyle(card.querySelector(".project-tags li")!);
+      const action = getComputedStyle(card.querySelector(".project-links a")!);
+      return {
+        titleFont: title.fontFamily,
+        titleSize: parseFloat(title.fontSize),
+        bodySize: parseFloat(body.fontSize),
+        bodyLineHeight: parseFloat(body.lineHeight),
+        dateSize: parseFloat(date.fontSize),
+        tagSize: parseFloat(tag.fontSize),
+        actionSize: parseFloat(action.fontSize),
+      };
+    });
+    expect(typography.titleFont).toMatch(/Fraunces/i);
+    expect(typography.titleSize).toBeGreaterThanOrEqual(25);
+    expect(typography.bodySize).toBeGreaterThanOrEqual(12.5);
+    expect(typography.bodyLineHeight / typography.bodySize).toBeGreaterThanOrEqual(1.6);
+    expect(typography.dateSize).toBeGreaterThanOrEqual(9.5);
+    expect(typography.tagSize).toBeGreaterThanOrEqual(10);
+    expect(typography.actionSize).toBeGreaterThanOrEqual(11);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  }
+});
+
 test("project dates use a readable warm accent without changing their content", async ({ page }) => {
   await page.goto("/#work");
   const firstDate = page.locator(".project-card .project-date").first();
