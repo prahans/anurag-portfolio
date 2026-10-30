@@ -25,7 +25,7 @@ export const projects: Project[] = [
   {
     id: "patchverdict",
     title: "PatchVerdict",
-    description: "AI can suggest a fix, but how do you know it works? PatchVerdict investigates bugs, tests candidate repairs in a sandbox, and makes the evidence behind each verdict easier to inspect.",
+    description: "An AI-suggested fix is only a starting point. PatchVerdict checks controlled bugs, tests candidate patches, and brings the logs, diffs, and verdicts together so the evidence is easier to review.",
     category: "AI · Developer tools",
     group: "ai-tools",
     date: "Sep–Oct 2026",
@@ -43,7 +43,7 @@ export const projects: Project[] = [
   {
     id: "repo-explain",
     title: "RepoExplain",
-    description: "A friendlier starting point for unfamiliar codebases. Paste a public GitHub repository to explore its stack, important files, and architecture through structured, streaming AI explanations.",
+    description: "New codebases can feel like a maze. RepoExplain turns a public GitHub link into a guided look at the tech stack, key files, and architecture, with AI explanations delivered as you explore.",
     category: "AI · Code exploration",
     group: "ai-tools",
     date: "Sep 2026",
@@ -61,7 +61,7 @@ export const projects: Project[] = [
   {
     id: "the-wild-oasis",
     title: "The Wild Oasis",
-    description: "A little getaway begins here. Explore cozy cabins in the Italian Dolomites, choose your dates, and manage your stay from a welcoming guest space.",
+    description: "Plan a little escape to the Italian Dolomites. Explore cabins, choose your dates, make a reservation, and manage your stay from a dedicated guest account.",
     category: "Travel · Cabin reservations",
     group: "travel",
     date: "Sep 2026",
@@ -78,7 +78,7 @@ export const projects: Project[] = [
   {
     id: "wanderlust",
     title: "WanderLust",
-    description: "For the places worth discovering and stories worth sharing. Browse unique stays, find your next favorite spot, and share listings and reviews with fellow travelers.",
+    description: "A place for stays worth discovering. Browse and filter listings, share reviews, or sign in to publish and manage a getaway of your own.",
     category: "Travel · Listings & reviews",
     group: "travel",
     date: "Jan–Sep 2026",
@@ -95,7 +95,7 @@ export const projects: Project[] = [
   {
     id: "worldwise",
     title: "WorldWise",
-    description: "Every place has a story. Pin cities on an interactive map, remember where you've been, and collect the little notes that make each journey yours.",
+    description: "A personal travel journal with a map at its heart. Save cities you’ve visited, add dates and notes, and revisit the memories behind each stop.",
     category: "Travel · Interactive maps",
     group: "travel",
     date: "Aug 2026",
@@ -112,11 +112,11 @@ export const projects: Project[] = [
   {
     id: "stock-trading-platform",
     title: "Stock Trading Platform",
-    description: "A hands-on look inside an investing dashboard: secure accounts, holdings, and positions, with more trading features still taking shape.",
+    description: "A stock-trading practice project with account access and a dashboard for holdings and positions. Order flows and deeper analytics are still in development.",
     category: "Finance · Trading dashboard",
     group: "apps",
     date: "Mar–Sep 2026",
-    status: "Still in the making",
+    status: "In development",
     demoLabel: "View website",
     technologies: ["React", "TypeScript", "MongoDB"],
     image: "/images/screenshots/zerodha.png",
@@ -130,7 +130,7 @@ export const projects: Project[] = [
   {
     id: "wild-oasis-admin",
     title: "Wild Oasis Admin",
-    description: "A thoughtful home for the people behind every stay. Manage cabins, welcome guests, keep bookings organized, and see the bigger picture from one dashboard.",
+    description: "Behind every welcoming stay is a team keeping things running. This dashboard brings cabin management, bookings, guest details, and business insights into one place.",
     category: "Hospitality · Admin dashboard",
     group: "travel",
     date: "Aug–Sep 2026",
@@ -147,7 +147,7 @@ export const projects: Project[] = [
   {
     id: "fast-react-pizza",
     title: "Fast React Pizza",
-    description: "Good pizza, just a few clicks away. Browse the menu, build your perfect cart, place an order, and look it up whenever you're hungry for an update.",
+    description: "From first craving to order confirmation: explore the pizza menu, adjust your cart, place an order, and look up its details when you need them.",
     category: "Food · Online ordering",
     group: "apps",
     date: "Aug 2026",

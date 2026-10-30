@@ -28,7 +28,7 @@ export function FeaturedProjectsGallery() {
           <span className="project-collection-mark" aria-hidden="true">✳</span>
           <span className="project-collection-label">Personal projects</span>
           <span className="project-collection-separator" aria-hidden="true">/</span>
-          <span className="project-collection-note">Little ideas, brought to life.</span>
+          <span className="project-collection-note">Curiosity, put to work.</span>
         </div>
         <span className="project-collection-total">
           {String(featuredProjects.length).padStart(2, "0")} selected builds

@@ -1,6 +1,6 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
 
-const notebookText = "I enjoy building useful things, learning as I go, and paying attention to the details. Good software isn't just about making something work — it's about making someone's experience a little better.";
+const notebookText = "I like understanding why a problem matters before deciding how to solve it. Then I build, test, listen, and refine—because good software should feel clear and considerate to the person using it.";
 
 async function openArtwork(page: Page) {
   await page.goto("/");

@@ -10,11 +10,11 @@ export const site = {
   phoneDisplay: "+977 9707108983",
   resume: undefined as string | undefined,
   heroWorkspaceSrc: "/images/hero/workspace-v1.webp",
-  heroWorkspaceAlt: "A sunlit developer workspace with a laptop displaying code and a product interface, an open notebook, a mug, books, plants, a camera, and a Nepal mountain postcard.",
+  heroWorkspaceAlt: "An illustrated, sunlit desk with a laptop displaying code, an open notebook, coffee, books, plants, a light bulb, and a Nepal mountain postcard.",
   greeting: "Hi there! I’m Anurag.",
-  introduction: "I’m a full-stack developer who enjoys turning ideas into useful, real-world products. I love working on projects that solve meaningful problems and bring a little more clarity, joy, and convenience to people’s everyday lives.",
-  about: "I’m a developer who genuinely enjoys creating things for the web. I like working on projects that solve real problems and make people’s lives a bit easier. When I’m not coding, you’ll probably find me exploring new ideas, learning something new, or enjoying a cup of coffee.",
-  contact: "I’m always happy to connect, exchange ideas, or talk about interesting projects and opportunities.",
+  introduction: "I enjoy building web apps from end to end: working through backend logic, shaping thoughtful interfaces, and refining the details that make them easier to use. Curiosity gets me started; care keeps me improving.",
+  about: "I’m a developer in Nepal who likes understanding a problem before reaching for the keyboard. I enjoy connecting the frontend and backend, learning from what doesn’t work, and polishing the details that help people feel at ease with technology. Off-screen, you’ll usually find me exploring an idea or enjoying a coffee.",
+  contact: "Have a project, a role, or a tricky problem in mind? I’d love to hear about it. A thoughtful conversation—or even a simple hello—is a good place to start.",
 };
 
 export const navigation = [

@@ -11,7 +11,7 @@ export function TechStack() {
       <Reveal delay={0.1}>
         <div className="tech-heading-row">
           <SectionHeading number="04" title="Tech Stack" id="skills-heading" />
-          <span className="tech-caption">Tools I work with</span>
+          <span className="tech-caption">Tools I build with</span>
         </div>
         <ul className="skills-grid" aria-label="Technology stack">
           {skills.map((skill) => (

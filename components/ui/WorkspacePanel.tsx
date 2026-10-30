@@ -79,13 +79,13 @@ export function WorkspacePanel({ kind, onClose, returnFocusRef }: WorkspacePanel
         <div className="workspace-notebook-content">
           <h2 id={`${id}-title`}>A little note from me</h2>
           <div className="workspace-notebook-rule" aria-hidden="true" />
-          <p>I enjoy building useful things, learning as I go, and paying attention to the details. Good software isn&apos;t just about making something work — it&apos;s about making someone&apos;s experience a little better.</p>
+          <p>I like understanding why a problem matters before deciding how to solve it. Then I build, test, listen, and refine—because good software should feel clear and considerate to the person using it.</p>
           <p className="workspace-notebook-signoff">Still learning. Always building. ☕</p>
         </div>
       ) : kind === "laptop" ? (
         <>
           <h2 id={`${id}-title`}>Explore my workspace</h2>
-          <p id={`${id}-description`} className="workspace-panel-description">An interactive example, inspired by the scene.</p>
+          <p id={`${id}-description`} className="workspace-panel-description">A tiny React experiment you can try right here.</p>
           <WorkspaceTabs />
         </>
       ) : null}
@@ -123,7 +123,7 @@ function WorkspaceTabs() {
       <div id={`${id}-code`} role="tabpanel" aria-labelledby={`${id}-code-tab`} tabIndex={0} hidden={activeTab !== "code"} className="workspace-tab-content">
         <div className="workspace-code-file"><span aria-hidden="true" /><span>little-ideas.tsx</span><span>TypeScript / React</span></div>
         <pre className="workspace-code"><code><span className="code-keyword">import</span>{" { useState } "}<span className="code-keyword">from</span>{" "}<span className="code-string">&quot;react&quot;</span>{";\n\n"}<span className="code-keyword">export function</span>{" "}<span className="code-function">LittleIdeas</span>{"() {\n  "}<span className="code-keyword">const</span>{" [ideas, setIdeas] =\n    "}<span className="code-function">useState</span>{"<"}<span className="code-type">number</span>{">("}<span className="code-number">1</span>{");\n\n  "}<span className="code-keyword">return</span>{" (\n    <"}<span className="code-tag">button</span>{"\n      "}<span className="code-property">onClick</span>{"={() => "}<span className="code-function">setIdeas</span>{"(ideas + "}<span className="code-number">1</span>{")}\n    >\n      {ideas} ideas to explore\n    </"}<span className="code-tag">button</span>{">\n  );\n}"}</code></pre>
-        <p className="workspace-code-caption">Small ideas. A little code. Something useful.</p>
+        <p className="workspace-code-caption">A small experiment, built one thoughtful step at a time.</p>
       </div>
       <div id={`${id}-preview`} role="tabpanel" aria-labelledby={`${id}-preview-tab`} tabIndex={0} hidden={activeTab !== "preview"} className="workspace-tab-content">
         <IdeaPreview />
@@ -137,12 +137,12 @@ function IdeaPreview() {
 
   return (
     <div className="workspace-preview">
-      <div className="workspace-preview-top"><span><Sprout size={16} aria-hidden="true" /> little ideas</span><span className="workspace-demo-status"><i aria-hidden="true" /> Demo is live</span></div>
-      <h3>A little closer<br />to something good.</h3>
-      <p>A small place to turn curiosity into a next step.</p>
+      <div className="workspace-preview-top"><span><Sprout size={16} aria-hidden="true" /> little ideas</span><span className="workspace-demo-status"><i aria-hidden="true" /> Interactive preview</span></div>
+      <h3>Every idea starts<br />somewhere.</h3>
+      <p>Try one small change and see what happens.</p>
       <div className="workspace-preview-cards">
-        <div><span className="workspace-preview-icon"><Sprout size={18} aria-hidden="true" /></span><strong>Make room for ideas</strong><span>Start with a useful question.</span></div>
-        <div><span className="workspace-preview-icon"><Check size={18} aria-hidden="true" /></span><strong>Build, learn, repeat</strong><span>One thoughtful detail at a time.</span></div>
+        <div><span className="workspace-preview-icon"><Sprout size={18} aria-hidden="true" /></span><strong>Start with a question</strong><span>Find something worth understanding.</span></div>
+        <div><span className="workspace-preview-icon"><Check size={18} aria-hidden="true" /></span><strong>Build, test, improve</strong><span>Let each step teach you something.</span></div>
       </div>
       <div className="workspace-preview-bottom">
         <span className="workspace-idea-count" role="status" aria-live="polite">{ideaCount} {ideaCount === 1 ? "idea" : "ideas"} to explore</span>

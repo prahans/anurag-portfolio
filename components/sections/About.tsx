@@ -4,10 +4,10 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 const traits = [
-  { title: "Curious", text: "Always exploring new ideas and technologies.", icon: Lightbulb, tone: "yellow" },
-  { title: "Collaborative", text: "I enjoy learning from others and sharing ideas.", icon: Users, tone: "blue" },
-  { title: "Problem Solver", text: "I like turning complicated problems into practical solutions.", icon: Sprout, tone: "pink" },
-  { title: "Purpose Driven", text: "I want to build things that make a positive difference.", icon: Heart, tone: "peach" },
+  { title: "Curious", text: "I ask questions and enjoy finding out how things work.", icon: Lightbulb, tone: "yellow" },
+  { title: "Collaborative", text: "I value honest feedback and ideas built together.", icon: Users, tone: "blue" },
+  { title: "Problem Solver", text: "I break messy challenges into manageable steps.", icon: Sprout, tone: "pink" },
+  { title: "People-Minded", text: "I care how the finished product feels to use.", icon: Heart, tone: "peach" },
 ];
 
 export function About() {

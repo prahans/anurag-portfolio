@@ -248,7 +248,7 @@ test("featured work shows real projects with screenshots, dates and links", asyn
       await expect(card.locator(`a[href="${project.demo}"]`)).toHaveAttribute("rel", "noopener noreferrer");
       await expect(card.locator(".project-status")).not.toContainText("Concept placeholder");
     }
-    await expect(cards.nth(5).locator(".project-status")).toHaveText("Still in the making");
+    await expect(cards.nth(5).locator(".project-status")).toHaveText("In development");
     await expect(cards.nth(4).locator(".project-tags")).toContainText("Leaflet");
     await expect(cards.nth(5).locator(".project-tags")).toContainText("MongoDB");
     await expect(cards.nth(6).locator(".project-tags")).toContainText("Supabase");

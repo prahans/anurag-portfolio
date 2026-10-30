@@ -13,12 +13,12 @@ const mono = IBM_Plex_Mono({ variable: "--font-code", subsets: ["latin"], weight
 
 export const metadata: Metadata = {
   title: `${site.name} — Creative Full-Stack Developer`,
-  description: "A full-stack developer based in Nepal, turning ideas into useful, thoughtful digital experiences. Explore my work, my approach, and the tools I enjoy using.",
+  description: "Explore the projects and process of a full-stack developer in Nepal, building thoughtful web apps across frontend, backend, and AI-assisted tools.",
   applicationName: "Anurag Panuhar Portfolio",
   authors: [{ name: site.name, url: site.github }],
   openGraph: {
     title: `${site.name} — Creative Full-Stack Developer`,
-    description: "Building digital experiences that make life a little better. Full-stack developer, based in Nepal.",
+    description: "Thoughtful web apps, practical problem-solving, and curious experiments. A full-stack developer building from Nepal.",
     type: "website",
     locale: "en_US",
   },

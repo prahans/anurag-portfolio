@@ -13,7 +13,7 @@ export function Contact() {
         <Reveal>
           <SectionHeading number="05" title="Let’s connect" id="contact-heading" />
           <div className="contact-content">
-            <h3>Have an idea?<br />Let&apos;s make something<br className="contact-line-break" /> <em>good</em> together.</h3>
+            <h3>Have an idea?<br />Let&apos;s build something<br className="contact-line-break" /> <em>useful</em> together.</h3>
             <div className="contact-aside">
               <p>{site.contact}</p>
               <div className="contact-actions" aria-label="Ways to connect">
@@ -56,7 +56,7 @@ export function Contact() {
                 )}
                 {site.resume && <a className="contact-text-link" href={site.resume} target="_blank" rel="noopener noreferrer">Résumé <ArrowUpRight size={15} aria-hidden="true" /></a>}
               </div>
-              <span className="contact-note">Good things start with a conversation.</span>
+              <span className="contact-note">Good collaborations start with a simple hello.</span>
             </div>
           </div>
         </Reveal>

@@ -10,7 +10,7 @@ export function FeaturedWork() {
         <Reveal className="work-heading-row">
           <SectionHeading number="02" title="Featured Work" id="work-heading" />
           <MoveRight className="heading-arrow" size={37} strokeWidth={1} aria-hidden="true" />
-          <p>A few things I&apos;ve been building, exploring,<br className="desktop-break" /> and learning along the way.</p>
+          <p>From AI tools to everyday web apps,<br className="desktop-break" /> here&apos;s what I&apos;ve been building and learning.</p>
           <span className="work-note">Made with curiosity</span>
         </Reveal>
         <FeaturedProjectsGallery />
