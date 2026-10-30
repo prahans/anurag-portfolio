@@ -29,6 +29,30 @@ async function expectPanelWithinViewport(page: Page, panel: Locator) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(viewport!.width);
 }
 
+async function seekBird(page: Page, milliseconds: number) {
+  await page.locator(".workspace-bird-layer").evaluate((element, time) => {
+    for (const animation of element.getAnimations({ subtree: true })) {
+      animation.pause();
+      animation.currentTime = time;
+    }
+  }, milliseconds);
+}
+
+async function expectBirdOnBezel(page: Page) {
+  // The feet anchor is measured against the approved image, not the viewport.
+  const alignment = await page.locator(".workspace-bird").evaluate((element) => {
+    const bird = element as SVGGraphicsElement;
+    const image = document.querySelector(".workspace-image")!.getBoundingClientRect();
+    const feet = new DOMPoint(0, 0).matrixTransform(bird.getScreenCTM()!);
+    return {
+      x: (feet.x - image.x) / image.width,
+      y: (feet.y - image.y) / image.height,
+    };
+  });
+  expect(alignment.x).toBeCloseTo(640 / 1109, 3);
+  expect(alignment.y).toBeCloseTo(258 / 684, 3);
+}
+
 // Centers measured from the approved source crop, independent of viewport size.
 const sourceObjectCenters = [
   { selector: ".workspace-hotspot--laptop", x: 0.5375, y: 0.572 },
@@ -36,7 +60,7 @@ const sourceObjectCenters = [
   { selector: ".workspace-hotspot--mug", x: 0.8735, y: 0.6665 },
 ];
 
-for (const width of [1440, 1280, 768, 390, 360]) {
+for (const width of [1440, 1280, 1024, 768, 390, 360]) {
   test(`workspace hotspots and panels stay aligned at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     // A still scene lets geometry assertions inspect the source alignment directly.
@@ -173,16 +197,49 @@ test("a tiny decorative bird flies across the hero, perches, and never blocks la
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await openArtwork(page);
 
+  const layer = page.locator(".workspace-bird-layer");
   const bird = page.locator(".workspace-bird");
   await expect(bird).toHaveCount(1);
-  await expect(bird).toHaveAttribute("aria-hidden", "true");
+  await expect(layer).toHaveAttribute("aria-hidden", "true");
+  await expect(layer).toHaveAttribute("focusable", "false");
   await expect(bird).toHaveCSS("pointer-events", "none");
-  await expect(bird).toHaveCSS("animation-name", "workspace-bird-journey");
-  await expect(bird.locator(".workspace-bird-wing")).toHaveCSS("animation-name", "workspace-bird-wingbeat");
-  await expect(bird).toHaveCSS("animation-duration", "24s");
-  expect(await bird.evaluate((element) =>
-    element.getAnimations().some((animation) => animation.playState === "running"),
+  await expect(bird.locator(".workspace-bird-wing")).toHaveCount(2);
+  await expect.poll(() => bird.evaluate((element) =>
+    element.getAnimations().some((animation) => animation.id === "workspace-bird-journey" && animation.playState === "running"),
   )).toBe(true);
+  const initialTime = await bird.evaluate((element) => {
+    const journey = element.getAnimations().find((animation) => animation.id === "workspace-bird-journey")!;
+    return { time: Number(journey.currentTime), duration: journey.effect!.getTiming().duration };
+  });
+  expect(initialTime.duration).toBe(28_000);
+  await expect.poll(() => bird.evaluate((element) => Number(element.getAnimations()[0].currentTime))).toBeGreaterThan(initialTime.time + 50);
+
+  await seekBird(page, 3_000);
+  await expect(bird.locator(".workspace-bird-wing--near")).toHaveCSS("opacity", "1");
+  const firstWingPose = await bird.locator(".workspace-bird-wing--near").evaluate((element) => getComputedStyle(element).transform);
+  // Avoid sampling symmetric points on the upstroke and downstroke.
+  await seekBird(page, 3_040);
+  expect(await bird.locator(".workspace-bird-wing--near").evaluate((element) => getComputedStyle(element).transform)).not.toBe(firstWingPose);
+
+  // The feet stay connected throughout the nine-second rest, with folded wings.
+  for (const time of [8_500, 12_000, 16_800]) {
+    await seekBird(page, time);
+    await expectBirdOnBezel(page);
+    await expect(bird.locator(".workspace-bird-folded-wing")).toHaveCSS("opacity", "1");
+    for (const wing of await bird.locator(".workspace-bird-wing").all()) {
+      await expect(wing).toHaveCSS("opacity", "0");
+    }
+  }
+
+  await seekBird(page, 18_500);
+  await expect(bird.locator(".workspace-bird-wing--near")).toHaveCSS("opacity", "1");
+
+  // Both sides of the loop reset are invisible: no on-screen teleport.
+  for (const time of [27_990, 0]) {
+    await seekBird(page, time);
+    await expect(bird).toHaveCSS("opacity", "0");
+  }
+  await seekBird(page, 12_000);
 
   // The same laptop hotspot remains clickable with the decorative bird present.
   await page.getByRole("button", { name: "Explore my workspace", exact: true }).click();
@@ -191,15 +248,79 @@ test("a tiny decorative bird flies across the hero, perches, and never blocks la
   await expect(page.getByRole("dialog")).not.toBeVisible();
 });
 
-test("bird stays perched and still on small screens", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+for (const width of [1440, 1280, 1024, 768]) {
+  test(`bird flight stays inside the workspace composition at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await openArtwork(page);
+    const layer = page.locator(".workspace-bird-layer");
+    await expect(layer).toHaveCSS("overflow", "hidden");
+    await expect.poll(() => layer.evaluate((element) => element.getAnimations({ subtree: true }).length)).toBeGreaterThan(0);
+    for (const time of [2_400, 4_800, 6_900, 8_600, 12_000, 18_500, 20_000]) {
+      await seekBird(page, time);
+      const image = await page.locator(".workspace-image").boundingBox();
+      const bird = await page.locator(".workspace-bird").boundingBox();
+      expect(image).not.toBeNull();
+      expect(bird).not.toBeNull();
+      expect(bird!.x).toBeGreaterThanOrEqual(image!.x - 1);
+      expect(bird!.y).toBeGreaterThanOrEqual(image!.y - 1);
+      expect(bird!.x + bird!.width).toBeLessThanOrEqual(image!.x + image!.width + 1);
+      expect(bird!.y + bird!.height).toBeLessThanOrEqual(image!.y + image!.height + 1);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    }
+    await seekBird(page, 12_000);
+    await expectBirdOnBezel(page);
+  });
+}
+
+for (const width of [390, 360]) {
+  test(`bird stays perched and still on ${width}px screens`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await openArtwork(page);
+    const bird = page.locator(".workspace-bird");
+    await expect(bird).toBeVisible();
+    await expectBirdOnBezel(page);
+    await expect(bird.locator(".workspace-bird-folded-wing")).toHaveCSS("opacity", "1");
+    expect(await page.locator(".workspace-bird-layer").evaluate((element) => element.getAnimations({ subtree: true }).length)).toBe(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    await page.getByRole("button", { name: "Explore my workspace", exact: true }).click();
+    await expect(page.getByRole("dialog", { name: "Explore my workspace" })).toBeVisible();
+  });
+}
+
+test("bird pauses outside the viewport and resumes when the workspace returns", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const scene = await openArtwork(page);
+  const layer = page.locator(".workspace-bird-layer");
+  await expect.poll(() => layer.evaluate((element) => element.getAnimations({ subtree: true }).some((animation) => animation.playState === "running"))).toBe(true);
+  await page.locator("footer").scrollIntoViewIfNeeded();
+  await expect.poll(() => layer.evaluate((element) => element.getAnimations({ subtree: true }).every((animation) => animation.playState === "paused"))).toBe(true);
+  await scene.scrollIntoViewIfNeeded();
+  await expect.poll(() => layer.evaluate((element) => element.getAnimations({ subtree: true }).every((animation) => animation.playState === "running"))).toBe(true);
+});
+
+test("bird responds to motion preferences and viewport changes without leaving old animations", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await openArtwork(page);
-  const bird = page.locator(".workspace-bird");
-  await expect(bird).toBeVisible();
-  await expect(bird).toHaveCSS("animation-name", "none");
-  await expect(bird).toHaveCSS("left", /.+/);
-  await expect(bird.locator(".workspace-bird-wing")).toHaveCSS("animation-name", "none");
+  const layer = page.locator(".workspace-bird-layer");
+  const animationCount = () => layer.evaluate((element) => element.getAnimations({ subtree: true }).length);
+  await expect.poll(animationCount).toBeGreaterThan(0);
+  const originalCount = await animationCount();
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect.poll(animationCount).toBe(0);
+  await expectBirdOnBezel(page);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await expect.poll(animationCount).toBe(originalCount);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect.poll(animationCount).toBe(0);
+  await expectBirdOnBezel(page);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await expect.poll(animationCount).toBe(originalCount);
 });
 
 test("coffee steam drifts continuously, without clicking or hovering the mug", async ({ page }) => {
@@ -281,8 +402,8 @@ test("reduced motion leaves the artwork static while interactions remain usable"
   await expect(page.locator(".workspace-laptop-glow")).toHaveCSS("animation-name", "none");
   await expect(page.locator(".workspace-laptop-cursor")).toHaveCSS("animation-name", "none");
   await expect(page.locator(".workspace-bird")).toBeVisible();
-  await expect(page.locator(".workspace-bird")).toHaveCSS("animation-name", "none");
-  await expect(page.locator(".workspace-bird-wing")).toHaveCSS("animation-name", "none");
+  await expectBirdOnBezel(page);
+  expect(await page.locator(".workspace-bird-layer").evaluate((element) => element.getAnimations({ subtree: true }).length)).toBe(0);
   const runningAnimations = await scene.evaluate((element) => element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running").length);
   expect(runningAnimations).toBe(0);
   await page.getByRole("button", { name: "Read my notes", exact: true }).click();

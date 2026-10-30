@@ -1,25 +1,60 @@
-/**
- * A tiny illustrated visitor to the developer's workspace.
- *
- * This is decorative artwork, not a control: CSS drives a slow flight loop,
- * a long perch on the laptop bezel and gentle wing beats during flight.
- */
+"use client";
+
+import { useEffect, useRef } from "react";
+import { WorkspaceBirdIllustration } from "./WorkspaceBirdIllustration";
+import { animateWorkspaceBird } from "./workspace-bird-motion";
+
+/** The SVG shares the artwork's source coordinates, including its perch. */
 export function WorkspaceBird() {
+  const layerRef = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    const layer = layerRef.current;
+    if (!layer) return;
+    const motionAllowed = window.matchMedia("(min-width: 600px) and (prefers-reduced-motion: no-preference)");
+    let animations: Animation[] = [];
+    let inView = false;
+
+    const updatePlayback = () => {
+      for (const animation of animations) {
+        if (inView && !document.hidden) animation.play();
+        else animation.pause();
+      }
+    };
+    const configure = () => {
+      animations.forEach((animation) => animation.cancel());
+      animations = motionAllowed.matches ? animateWorkspaceBird(layer) : [];
+      updatePlayback();
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      updatePlayback();
+    });
+    observer.observe(layer);
+    configure();
+    motionAllowed.addEventListener("change", configure);
+    document.addEventListener("visibilitychange", updatePlayback);
+
+    return () => {
+      observer.disconnect();
+      animations.forEach((animation) => animation.cancel());
+      motionAllowed.removeEventListener("change", configure);
+      document.removeEventListener("visibilitychange", updatePlayback);
+    };
+  }, []);
+
   return (
-    <div className="workspace-bird" aria-hidden="true">
-      <svg viewBox="0 0 50 42" focusable="false">
-        {/* Tail and feet sit behind the body. */}
-        <path d="M15 23 Q7 20 2 12 Q10 15 17 17 Z" fill="#796450" stroke="#5a4b3f" strokeWidth="1.25" strokeLinejoin="round" />
-        <path d="M24 32 V39 M20 39 H28 M34 32 V39 M30 39 H38" fill="none" stroke="#6e5a45" strokeWidth="1.4" strokeLinecap="round" />
-        <ellipse cx="25" cy="23" rx="15" ry="11" fill="#9a8068" stroke="#584e43" strokeWidth="1.25" />
-        <path d="M24 26 Q32 34 39 26 Q34 36 25 32 Z" fill="#efe3cb" />
-        <circle cx="32" cy="14" r="9" fill="#9a8068" stroke="#584e43" strokeWidth="1.25" />
-        {/* Folded at rest; small flaps while flying. */}
-        <path className="workspace-bird-wing" d="M18 23 Q14 11 23 13 Q33 16 34 24 Q27 29 18 23 Z" fill="#687e6c" stroke="#526751" strokeWidth="1.2" strokeLinejoin="round" />
-        <circle cx="35" cy="12" r="1.6" fill="#101522" />
-        <circle cx="35.5" cy="11.5" r=".45" fill="#fff" />
-        <path d="M40 15 L48 17 L40 20 Z" fill="#ff8759" stroke="#b96b43" strokeWidth=".7" strokeLinejoin="round" />
-      </svg>
-    </div>
+    <svg ref={layerRef} className="workspace-bird-layer" viewBox="0 0 1109 684" aria-hidden="true" focusable="false">
+      <ellipse className="workspace-bird-shadow" cx="640" cy="258.6" rx="12" ry="1.6" transform="rotate(-3.3 640 258.6)" fill="#352c23" />
+      <g className="workspace-bird" aria-hidden="true">
+        <g className="workspace-bird-scale">
+          <g className="workspace-bird-pose">
+            <g className="workspace-bird-bob">
+              <WorkspaceBirdIllustration />
+            </g>
+          </g>
+        </g>
+      </g>
+    </svg>
   );
 }
