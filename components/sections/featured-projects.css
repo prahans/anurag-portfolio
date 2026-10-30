@@ -1,8 +1,26 @@
 /* Featured projects: scoped additions to the existing warm editorial style. */
+/* A small editorial collection index and restrained category filters. */
+.featured-work .project-collection { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
+.featured-work .project-collection-copy { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 9px; row-gap: 3px; }
+.featured-work .project-collection-mark { color: var(--cobalt); font-size: 16px; line-height: 1; }
+.featured-work .project-collection-label { color: var(--ink); font: 600 10px/1.4 var(--font-mono), monospace; text-transform: uppercase; letter-spacing: .65px; }
+.featured-work .project-collection-separator { color: #b1aca0; }
+.featured-work .project-collection-note { color: #82796e; font: 18px/1.2 var(--font-handwriting), cursive; }
+.featured-work .project-collection-total { color: var(--muted); font: 10px/1.5 var(--font-mono), monospace; white-space: nowrap; }
+.featured-work .project-filter-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px 16px; padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+.featured-work .project-filters { display: flex; flex-wrap: wrap; gap: 7px; min-width: 0; }
+.featured-work .project-filter { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 39px; padding: 9px 12px; border: 1px solid #d8d4c9; border-radius: 7px; background: #faf8f2; color: #555d6c; font: 600 11px/1.3 var(--font-body), sans-serif; cursor: pointer; transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+.featured-work .project-filter-count { color: #797d83; font: 10px/1.3 var(--font-mono), monospace; font-variant-numeric: tabular-nums; }
+.featured-work .project-filter:hover:not([aria-pressed="true"]) { border-color: #bdb9ae; background: #fffdfa; color: var(--ink); }
+.featured-work .project-filter[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: #fffefa; }
+.featured-work .project-filter[aria-pressed="true"] .project-filter-count { color: var(--lime); }
+.featured-work .project-filter:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 3px; }
+.featured-work .project-filter-status { color: #75796f; font: 10px/1.4 var(--font-mono), monospace; white-space: nowrap; margin: 0; }
+
 .featured-work .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .featured-work .project-card { isolation: isolate; min-height: 348px; padding: 21px 24px 23px; }
 .featured-work .project-meta { align-items: baseline; gap: 12px; font-size: 9px; }
-.featured-work .project-date { margin-right: auto; white-space: nowrap; color: var(--muted); }
+.featured-work .project-date { margin-right: auto; white-space: nowrap; color: #a44430; font-weight: 700; font-size: 9px; letter-spacing: .15px; padding-bottom: 2px; border-bottom: 2px solid #e9b29d; }
 .featured-work .project-category { text-align: right; }
 .featured-work .project-copy { display: flex; flex-direction: column; align-items: flex-start; width: 60%; min-height: 284px; padding-top: 20px; }
 .featured-work .project-copy h3 { font-size: 26px; margin-bottom: 10px; }
@@ -39,6 +57,12 @@
 }
 
 @media (max-width: 650px) {
+  .featured-work .project-collection { align-items: flex-start; }
+  .featured-work .project-collection-note { font-size: 16px; }
+  .featured-work .project-collection-total { font-size: 9px; }
+  .featured-work .project-filters { width: 100%; }
+  .featured-work .project-filter { min-height: 38px; padding: 8px 10px; gap: 7px; font-size: 10px; }
+  .featured-work .project-filter-status { width: 100%; text-align: right; font-size: 9px; }
   .featured-work .project-grid { grid-template-columns: 1fr; gap: 16px; }
   .featured-work .project-card { min-height: 0; padding: 19px 18px 0; }
   .featured-work .project-meta { gap: 8px; font-size: 8px; }
@@ -54,6 +78,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .featured-work .project-filter { transition: none; }
   .featured-work .project-links a { transition: none; }
   .featured-work .project-links a:hover { transform: none; }
 }

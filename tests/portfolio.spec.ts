@@ -166,6 +166,60 @@ test("failed clipboard access does not falsely report copied", async ({ page }) 
   await expect(copy).toHaveAttribute("data-tooltip", "Couldn\'t copy");
 });
 
+test("featured work filters the personal project collection with clear category counts", async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/#work");
+    const cards = page.locator("#project-results .project-card");
+    const filters = page.getByRole("group", { name: "Browse projects by category" });
+    const all = filters.getByRole("button", { name: "Show all projects (8)" });
+    const ai = filters.getByRole("button", { name: "Show ai & tools (2)" });
+    const travel = filters.getByRole("button", { name: "Show travel & stays (4)" });
+    const apps = filters.getByRole("button", { name: "Show apps & dashboards (2)" });
+
+    await expect(page.locator(".project-collection-label")).toHaveText("Personal projects");
+    await expect(page.locator(".project-collection-total")).toContainText("08 selected builds");
+    await expect(cards).toHaveCount(8);
+    await expect(all).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator(".project-filter-status")).toHaveText("Showing 8 of 8");
+
+    await ai.click();
+    await expect(ai).toHaveAttribute("aria-pressed", "true");
+    await expect(all).toHaveAttribute("aria-pressed", "false");
+    await expect(cards).toHaveCount(2);
+    await expect(cards.nth(0).getByRole("heading", { name: "PatchVerdict" })).toBeVisible();
+    await expect(cards.nth(1).getByRole("heading", { name: "RepoExplain" })).toBeVisible();
+
+    await travel.click();
+    await expect(cards).toHaveCount(4);
+    for (const name of ["The Wild Oasis", "WanderLust", "WorldWise", "Wild Oasis Admin"]) {
+      await expect(page.locator("#project-results").getByRole("heading", { name, exact: true })).toBeVisible();
+    }
+
+    await apps.click();
+    await expect(cards).toHaveCount(2);
+    await expect(cards.nth(0).getByRole("heading", { name: "Stock Trading Platform" })).toBeVisible();
+    await expect(cards.nth(1).getByRole("heading", { name: "Fast React Pizza" })).toBeVisible();
+    await expect(page.locator("#project-results .project-links a")).toHaveCount(4);
+    await expect(page.locator(".project-filter-status")).toHaveText("Showing 2 of 8");
+
+    // Native button focus and state remain keyboard-accessible.
+    await all.focus();
+    await page.keyboard.press("Enter");
+    await expect(all).toHaveAttribute("aria-pressed", "true");
+    await expect(cards).toHaveCount(8);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  }
+});
+
+test("project dates use a readable warm accent without changing their content", async ({ page }) => {
+  await page.goto("/#work");
+  const firstDate = page.locator(".project-card .project-date").first();
+  await expect(firstDate).toHaveText("Sep–Oct 2026");
+  await expect(firstDate).toHaveCSS("color", "rgb(164, 68, 48)");
+  await expect(firstDate).toHaveCSS("border-bottom-width", "2px");
+});
+
 test("featured work shows real projects with screenshots, dates and links", async ({ page }) => {
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });

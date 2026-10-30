@@ -1,6 +1,5 @@
 import { MoveRight } from "lucide-react";
-import { projects } from "@/data/projects";
-import { ProjectCard } from "@/components/ui/ProjectCard";
+import { FeaturedProjectsGallery } from "@/components/sections/FeaturedProjectsGallery";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
@@ -12,15 +11,9 @@ export function FeaturedWork() {
           <SectionHeading number="02" title="Featured Work" id="work-heading" />
           <MoveRight className="heading-arrow" size={37} strokeWidth={1} aria-hidden="true" />
           <p>A few things I&apos;ve been building, exploring,<br className="desktop-break" /> and learning along the way.</p>
-          <span className="work-note">A little more to come</span>
+          <span className="work-note">Made with curiosity</span>
         </Reveal>
-        <div className="project-grid">
-          {projects.filter((project) => project.featured).map((project, index) => (
-            <Reveal key={project.id} delay={index * 0.08}>
-              <ProjectCard project={project} index={index} />
-            </Reveal>
-          ))}
-        </div>
+        <FeaturedProjectsGallery />
       </div>
     </section>
   );

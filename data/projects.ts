@@ -1,8 +1,11 @@
+export type ProjectGroup = "ai-tools" | "travel" | "apps";
+
 export type Project = {
   id: string;
   title: string;
   description: string;
   category: string;
+  group: ProjectGroup;
   date: string;
   status?: string;
   demoLabel?: string;
@@ -24,6 +27,7 @@ export const projects: Project[] = [
     title: "PatchVerdict",
     description: "AI can suggest a fix, but how do you know it works? PatchVerdict investigates bugs, tests candidate repairs in a sandbox, and makes the evidence behind each verdict easier to inspect.",
     category: "AI · Developer tools",
+    group: "ai-tools",
     date: "Sep–Oct 2026",
     status: "Read-only showcase",
     demoLabel: "Live showcase",
@@ -41,6 +45,7 @@ export const projects: Project[] = [
     title: "RepoExplain",
     description: "A friendlier starting point for unfamiliar codebases. Paste a public GitHub repository to explore its stack, important files, and architecture through structured, streaming AI explanations.",
     category: "AI · Code exploration",
+    group: "ai-tools",
     date: "Sep 2026",
     status: "Public beta",
     demoLabel: "Try it live",
@@ -58,6 +63,7 @@ export const projects: Project[] = [
     title: "The Wild Oasis",
     description: "A little getaway begins here. Explore cozy cabins in the Italian Dolomites, choose your dates, and manage your stay from a welcoming guest space.",
     category: "Travel · Cabin reservations",
+    group: "travel",
     date: "Sep 2026",
     demoLabel: "Explore cabins",
     technologies: ["Next.js", "TypeScript", "Supabase"],
@@ -74,6 +80,7 @@ export const projects: Project[] = [
     title: "WanderLust",
     description: "For the places worth discovering and stories worth sharing. Browse unique stays, find your next favorite spot, and share listings and reviews with fellow travelers.",
     category: "Travel · Listings & reviews",
+    group: "travel",
     date: "Jan–Sep 2026",
     demoLabel: "Explore stays",
     technologies: ["Node.js", "Express", "MongoDB"],
@@ -90,6 +97,7 @@ export const projects: Project[] = [
     title: "WorldWise",
     description: "Every place has a story. Pin cities on an interactive map, remember where you've been, and collect the little notes that make each journey yours.",
     category: "Travel · Interactive maps",
+    group: "travel",
     date: "Aug 2026",
     demoLabel: "Explore the map",
     technologies: ["React", "Leaflet", "JSON Server"],
@@ -106,6 +114,7 @@ export const projects: Project[] = [
     title: "Stock Trading Platform",
     description: "A hands-on look inside an investing dashboard: secure accounts, holdings, and positions, with more trading features still taking shape.",
     category: "Finance · Trading dashboard",
+    group: "apps",
     date: "Mar–Sep 2026",
     status: "Still in the making",
     demoLabel: "View website",
@@ -123,6 +132,7 @@ export const projects: Project[] = [
     title: "Wild Oasis Admin",
     description: "A thoughtful home for the people behind every stay. Manage cabins, welcome guests, keep bookings organized, and see the bigger picture from one dashboard.",
     category: "Hospitality · Admin dashboard",
+    group: "travel",
     date: "Aug–Sep 2026",
     demoLabel: "View dashboard",
     technologies: ["React", "Supabase", "React Query"],
@@ -139,6 +149,7 @@ export const projects: Project[] = [
     title: "Fast React Pizza",
     description: "Good pizza, just a few clicks away. Browse the menu, build your perfect cart, place an order, and look it up whenever you're hungry for an update.",
     category: "Food · Online ordering",
+    group: "apps",
     date: "Aug 2026",
     demoLabel: "Order pizza",
     technologies: ["React", "Redux Toolkit", "Tailwind CSS"],
