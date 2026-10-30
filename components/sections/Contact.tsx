@@ -1,4 +1,4 @@
-import { ArrowUpRight, Mail, Phone } from "lucide-react";
+import { ArrowUpRight, Download, Mail, Phone } from "lucide-react";
 import { LinkedInIcon } from "@/components/ui/LinkedInIcon";
 import { GitHubIcon } from "@/components/ui/GitHubIcon";
 import { CopyEmailButton } from "@/components/ui/CopyEmailButton";
@@ -54,7 +54,11 @@ export function Contact() {
                     <ArrowUpRight size={15} aria-hidden="true" />
                   </a>
                 )}
-                {site.resume && <a className="contact-text-link" href={site.resume} target="_blank" rel="noopener noreferrer">Résumé <ArrowUpRight size={15} aria-hidden="true" /></a>}
+                {site.resume && (
+                  <a className="contact-text-link" href={site.resume} download={site.resumeDownloadName} aria-label="Download my résumé (PDF)">
+                    Download my résumé <Download size={15} aria-hidden="true" />
+                  </a>
+                )}
               </div>
               <span className="contact-note">Good collaborations start with a simple hello.</span>
             </div>

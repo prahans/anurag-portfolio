@@ -1,4 +1,27 @@
-import { test, expect } from "@playwright/test";
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { test, expect, type Locator, type Page } from "@playwright/test";
+
+const resumeURL = "/Anurag_Panuhar_Full_Stack_Developer_Resume.pdf";
+const resumeDownloadName = "Anurag_Panuhar_Resume.pdf";
+
+async function expectResumeDownload(page: Page, link: Locator) {
+  await expect(link).toHaveAttribute("href", resumeURL);
+  await expect(link).toHaveAttribute("download", resumeDownloadName);
+  await expect(link).not.toHaveAttribute("target", "_blank");
+  await expect(link.locator("svg")).toHaveAttribute("aria-hidden", "true");
+  const originalURL = page.url();
+  const downloadEvent = page.waitForEvent("download");
+  await link.click();
+  const download = await downloadEvent;
+  expect(download.suggestedFilename()).toBe(resumeDownloadName);
+  expect(await download.failure()).toBeNull();
+  const savedPath = await download.path();
+  expect(savedPath).not.toBeNull();
+  const original = await readFile(resolve("public", resumeURL.slice(1)));
+  expect((await readFile(savedPath!)).equals(original)).toBe(true);
+  await expect(page).toHaveURL(originalURL);
+}
 
 for (const width of [360, 390, 768, 1024, 1280, 1440]) {
   test(`portfolio layout and assets at ${width}px`, async ({ page }) => {
@@ -87,6 +110,118 @@ test("desktop calls to action and active section follow their destinations", asy
   await expect(page.getByRole("navigation").getByRole("link", { name: "05. Contact" })).toHaveAttribute("aria-current", "location");
   await expect(page.locator(".contact-button--email")).toHaveAttribute("href", "mailto:prahanspanuhar4@gmail.com");
   await expect(page.locator(".contact-social-link").first()).toHaveAttribute("href", "https://github.com/prahans");
+});
+
+test("the configured résumé URL serves the original PDF", async ({ request }) => {
+  const response = await request.get(resumeURL);
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toMatch(/^application\/pdf\b/);
+  const body = await response.body();
+  expect(body.subarray(0, 5).toString()).toBe("%PDF-");
+  expect(body.subarray(-1024).toString()).toContain("%%EOF");
+  expect(body.equals(await readFile(resolve("public", resumeURL.slice(1))))).toBe(true);
+});
+
+for (const width of [360, 390, 768, 1024, 1280, 1440]) {
+  test(`résumé downloads from the responsive navigation at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    const header = page.locator(".site-header");
+    const navigation = page.getByRole("navigation", { name: "Primary navigation" });
+    const desktopResume = header.locator(".header-actions a[download]");
+    const mobileResume = navigation.locator("a[download]");
+    const contactResume = page.locator("#contact a[download]");
+    const menu = page.locator(".menu-toggle");
+    const talk = header.getByRole("link", { name: "Let’s Talk", exact: true });
+
+    for (const link of [desktopResume, mobileResume, contactResume]) {
+      await expect(link).toHaveAttribute("href", resumeURL);
+      await expect(link).toHaveAttribute("download", resumeDownloadName);
+      await expect(link).toHaveAccessibleName("Download my résumé (PDF)");
+    }
+
+    const headerBoxes = await header.evaluate((element, desktop) => {
+      const selectors = [".brand", ".header-actions", ".menu-toggle", ...(desktop ? [".primary-navigation"] : [])];
+      return selectors.flatMap((selector) => {
+        const node = element.querySelector(selector);
+        if (!node) return [];
+        const bounds = node.getBoundingClientRect();
+        return bounds.width && bounds.height ? [{ left: bounds.left, right: bounds.right, top: bounds.top, bottom: bounds.bottom }] : [];
+      }).sort((a, b) => a.left - b.left);
+    }, width >= 1000);
+    for (const [index, bounds] of headerBoxes.entries()) {
+      expect(bounds.left).toBeGreaterThanOrEqual(0);
+      expect(bounds.right).toBeLessThanOrEqual(width);
+      if (index) expect(bounds.left).toBeGreaterThanOrEqual(headerBoxes[index - 1].right);
+    }
+
+    if (width < 1000) {
+      await expect(desktopResume).toBeHidden();
+      await expect(navigation).toBeHidden();
+      await menu.click();
+      await expect(mobileResume).toBeVisible();
+      const bounds = (await mobileResume.boundingBox())!;
+      expect(bounds.height).toBeGreaterThanOrEqual(44);
+      expect(bounds.x).toBeGreaterThanOrEqual(0);
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
+      await expectResumeDownload(page, mobileResume);
+      await expect(menu).toHaveAttribute("aria-expanded", "false");
+      await expect(menu).toBeFocused();
+    } else {
+      await expect(menu).toBeHidden();
+      await expect(mobileResume).toBeHidden();
+      await expect(desktopResume).toBeVisible();
+      await expect(desktopResume).toContainText("Get my résumé");
+      await expectResumeDownload(page, desktopResume);
+    }
+
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    if (width >= 600) {
+      await expect(talk).toBeVisible();
+      await talk.click();
+      await expect(page).toHaveURL(/#contact$/);
+      await expect(page.locator("#contact")).toBeInViewport();
+    } else {
+      await expect(talk).toBeHidden();
+    }
+  });
+}
+
+test("résumé downloads remain keyboard-accessible with reduced motion", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const resume = page.locator(".header-actions a[download]");
+  await page.getByRole("navigation").getByRole("link", { name: "05. Contact" }).focus();
+  await page.keyboard.press("Tab");
+  await expect(resume).toBeFocused();
+  await expect(resume).toHaveCSS("outline-style", "solid");
+  await expect(resume).toHaveCSS("outline-width", "2px");
+  await resume.hover();
+  await expect(resume.locator("svg")).toHaveCSS("transform", "none");
+  await expect(resume.locator("svg")).toHaveCSS("transition-duration", "0s");
+  const downloadEvent = page.waitForEvent("download");
+  await page.keyboard.press("Enter");
+  const download = await downloadEvent;
+  expect(download.suggestedFilename()).toBe(resumeDownloadName);
+  expect(await download.failure()).toBeNull();
+});
+
+test("the Contact résumé link downloads without JavaScript on desktop and mobile", async ({ browser }) => {
+  for (const width of [390, 1440]) {
+    const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width, height: 900 } });
+    try {
+      const page = await context.newPage();
+      await page.goto(`${process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3100"}/#contact`);
+      const resume = page.locator("#contact").getByRole("link", { name: "Download my résumé (PDF)", exact: true });
+      await expect(resume).toBeVisible();
+      await expect(resume).toContainText("Download my résumé");
+      await expectResumeDownload(page, resume);
+    } finally {
+      await context.close();
+    }
+  }
 });
 
 test("reduced motion keeps all content visible and disables animated scrolling", async ({ page }) => {

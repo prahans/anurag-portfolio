@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowUpRight, Download, Menu, X } from "lucide-react";
 import { navigation, site } from "@/data/site";
 
 export function Navbar() {
@@ -80,8 +80,26 @@ export function Navbar() {
               <span>{item.number}.</span> {item.label}
             </a>
           ))}
+          {site.resume && (
+            <a
+              className="button button-resume mobile-resume"
+              href={site.resume}
+              download={site.resumeDownloadName}
+              aria-label="Download my résumé (PDF)"
+              onClick={() => { setOpen(false); menuButton.current?.focus(); }}
+            >
+              Get my résumé <Download size={16} aria-hidden="true" />
+            </a>
+          )}
         </nav>
-        <a className="button button-dark header-contact" href="#contact">Let’s Talk <ArrowUpRight size={16} aria-hidden="true" /></a>
+        <div className="header-actions">
+          {site.resume && (
+            <a className="button button-resume header-resume" href={site.resume} download={site.resumeDownloadName} aria-label="Download my résumé (PDF)">
+              Get my résumé <Download size={16} aria-hidden="true" />
+            </a>
+          )}
+          <a className="button button-dark header-contact" href="#contact">Let’s Talk <ArrowUpRight size={16} aria-hidden="true" /></a>
+        </div>
       </div>
     </header>
   );

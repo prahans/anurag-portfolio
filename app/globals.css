@@ -61,6 +61,12 @@ section { scroll-margin-top: 100px; }
 .button-dark:hover { background: #293044; transform: translateY(-2px); }
 .button-text { padding-inline: 9px; }
 .button-text:hover { color: var(--cobalt); }
+.button-resume { gap: 9px; background: #fbf9f4; border-color: #d4d0c5; color: var(--ink); }
+.button-resume:hover { background: #f5e7dc; border-color: #d7b7a3; }
+.button-resume:hover svg { transform: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .button-resume:hover svg { transform: translateY(2px); }
+}
 
 /* The navigation remains a lightweight disclosure on small screens. */
 .site-header { position: sticky; top: 0; z-index: 30; background: rgba(247,245,239,.97); border-bottom: 1px solid rgba(222,221,213,.55); }
@@ -75,7 +81,10 @@ section { scroll-margin-top: 100px; }
 .nav-link::after { content: ""; position: absolute; left: 0; bottom: 8px; width: 100%; height: 2px; background: var(--cobalt); transform: scaleX(0); transform-origin: left; transition: transform .25s; }
 .nav-link:hover, .nav-link.is-active { color: var(--ink); }
 .nav-link.is-active::after, .nav-link:hover::after { transform: scaleX(1); }
+.header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.header-resume { min-height: 42px; padding: 9px 16px; font-size: 12px; }
 .header-contact { min-height: 42px; padding: 9px 19px; font-size: 12px; }
+.mobile-resume { display: none; }
 .menu-toggle { display: none; }
 
 /* Editorial hero. Each visual layer can be replaced independently. */
@@ -127,10 +136,12 @@ section { scroll-margin-top: 100px; }
   .container { width: calc(100% - 64px); }
   .header-inner { min-height: 78px; }
   .signature { font-size: 31px; }
-  .header-contact { margin-left: auto; }
+  .header-actions { margin-left: auto; }
+  .header-resume { display: none; }
   .menu-toggle { display: grid; place-items: center; order: 3; width: 44px; height: 44px; border: 1px solid var(--line); background: transparent; border-radius: 8px; }
-  .primary-navigation { display: none; position: absolute; top: 100%; left: 0; width: 100%; padding: 18px 32px; background: var(--background); border-bottom: 1px solid var(--line); box-shadow: 0 10px 15px #10152208; }
+  .primary-navigation { display: none; position: absolute; top: 100%; left: 0; width: 100%; padding: 18px 32px; background: var(--background); border-bottom: 1px solid var(--line); box-shadow: 0 10px 15px #10152208; flex-wrap: wrap; row-gap: 12px; }
   .primary-navigation.is-open { display: flex; justify-content: space-between; }
+  .mobile-resume { display: flex; flex-basis: 100%; width: 100%; min-height: 46px; }
   .nav-link { padding-block: 14px; font-size: 12px; }
   .hero-grid { grid-template-columns: 1fr; padding-top: 42px; padding-bottom: 28px; }
   .hero-copy { max-width: 640px; }
@@ -152,9 +163,11 @@ section { scroll-margin-top: 100px; }
   .signature { font-size: 29px; letter-spacing: -1.1px; gap: 7px; }
   .brand-dot { width: 6px; height: 6px; }
   .header-contact { display: none; }
+  .header-actions { display: none; }
   .primary-navigation { padding: 12px 20px 20px; flex-direction: column; align-items: stretch; gap: 0; }
   .nav-link { padding: 13px 8px; font-size: 12px; }
   .nav-link::after { width: 45px; left: 8px; bottom: 6px; }
+  .mobile-resume { flex-basis: auto; margin-top: 12px; }
   .hero-grid { padding-top: 31px; padding-bottom: 20px; }
   .hero-greeting { font-size: 10px; margin-bottom: 22px; }
   .hero-greeting > span { font-size: 21px; }
