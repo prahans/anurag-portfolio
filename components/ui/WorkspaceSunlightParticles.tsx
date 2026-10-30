@@ -18,7 +18,7 @@ const motes = [
     opacity: 0.86,
   },
   {
-    x: 902,
+    x: 973,
     y: 285,
     radius: 7.2,
     tone: "cream",
@@ -91,16 +91,16 @@ export function WorkspaceSunlightParticles() {
       <defs>
         <radialGradient id={`${gradientId}-gold`}>
           <stop offset="0" stopColor="#bd873f" />
-          <stop offset=".2" stopColor="#cd9d50" />
-          <stop offset=".4" stopColor="#e8bf76" stopOpacity=".9" />
-          <stop offset=".64" stopColor="#fff1c9" stopOpacity=".4" />
+          <stop offset=".28" stopColor="#bd873f" />
+          <stop offset=".45" stopColor="#e4b76d" stopOpacity=".9" />
+          <stop offset=".7" stopColor="#fff1c9" stopOpacity=".3" />
           <stop offset="1" stopColor="#fff1c9" stopOpacity="0" />
         </radialGradient>
         <radialGradient id={`${gradientId}-cream`}>
-          <stop offset="0" stopColor="#c29248" />
-          <stop offset=".2" stopColor="#ddb46c" />
-          <stop offset=".4" stopColor="#f4d99b" stopOpacity=".9" />
-          <stop offset=".64" stopColor="#fff6db" stopOpacity=".45" />
+          <stop offset="0" stopColor="#c18b3b" />
+          <stop offset=".3" stopColor="#c18b3b" />
+          <stop offset=".45" stopColor="#e8c384" stopOpacity=".9" />
+          <stop offset=".7" stopColor="#fff6db" stopOpacity=".35" />
           <stop offset="1" stopColor="#fff6db" stopOpacity="0" />
         </radialGradient>
       </defs>
