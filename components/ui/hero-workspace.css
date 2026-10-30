@@ -31,6 +31,11 @@
 .workspace-bird-folded-wing { opacity: 1; }
 
 .workspace-sunlight { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 83% 12%, #fff2c3 0%, #ffe9b440 24%, transparent 61%); opacity: .09; mask-image: linear-gradient(to bottom, #000 65%, transparent 98%); }
+/* Tiny feathered circles share the source canvas. Only their transforms and
+   opacity animate; the gradients provide soft edges without blur filters. */
+.workspace-sunlight-particles { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; }
+.workspace-sunlight-particle { pointer-events: none; opacity: 0; }
+.workspace-sunlight-particles[data-paused="true"] .workspace-sunlight-particle { animation-play-state: paused; }
 /* Local light anchored to the original bulb in the 1109 × 684 image:
    glass center ≈ (340, 390), or (30.7%, 57.0%). The original bulb cannot
    be switched off in a flattened picture; a shaded glass and nearby desk
@@ -120,6 +125,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .workspace-stage { animation: workspace-arrive .75s cubic-bezier(.22,1,.36,1) both; }
   .workspace-sunlight { animation: afternoon-light 9s ease-in-out 1 both; }
+  .workspace-sunlight-particle { animation: sunlight-dust-drift var(--dust-duration) ease-in-out var(--dust-delay) infinite both; }
   /* Both inverse shade/glow cycles use the same period and easing. */
   .workspace-bulb-room-shade, .workspace-bulb-glass-shade { animation: bulb-shadow-breathe 8.4s ease-in-out infinite; }
   .workspace-bulb-room-glow, .workspace-bulb-glass-glow { animation: bulb-light-breathe 8.4s ease-in-out infinite; }
@@ -130,6 +136,13 @@
   .mug-steam path:nth-child(3) { animation-delay: -2.1s; animation-duration: 2.9s; }
   @keyframes workspace-arrive { from { opacity: .2; transform: translateY(9px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes afternoon-light { 0% { opacity: .04; } 45% { opacity: .14; } 100% { opacity: .09; } }
+  @keyframes sunlight-dust-drift {
+    0% { transform: translate(0, 8px); opacity: 0; }
+    20% { opacity: calc(var(--dust-opacity) * .65); }
+    45% { transform: translate(var(--dust-sway), -4px); opacity: var(--dust-opacity); }
+    75% { opacity: calc(var(--dust-opacity) * .55); }
+    100% { transform: translate(var(--dust-drift), var(--dust-rise)); opacity: 0; }
+  }
   @keyframes bulb-shadow-breathe {
     0%, 100% { opacity: .68; }
     50% { opacity: .03; }
@@ -153,6 +166,8 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .workspace-sunlight-particles { display: none; }
+  .workspace-sunlight-particle { animation: none; }
   .workspace-stage, .workspace-sunlight, .mug-steam path, .workspace-laptop-glow, .workspace-laptop-cursor { animation: none; }
   .workspace-bulb-light > span { animation: none; }
   .workspace-bulb-room-shade { opacity: .25; }
@@ -167,6 +182,8 @@
 }
 
 @media (max-width: 599px) {
+  /* Two motes keep the small workspace quiet; hidden ones do no animation. */
+  .workspace-sunlight-particle:nth-of-type(n + 3) { display: none; animation: none; }
   /* Slightly more legible at small sizes, still scaling around its feet. */
   .workspace-bird-scale { transform: scale(.9); }
 }

@@ -334,6 +334,135 @@ test("bird responds to motion preferences and viewport changes without leaving o
   await expect.poll(animationCount).toBe(originalCount);
 });
 
+test("sunlight dust drifts automatically with staggered, invisible loop resets", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await openArtwork(page);
+  const layer = page.locator(".workspace-sunlight-particles");
+  const particles = layer.locator(".workspace-sunlight-particle");
+  await expect(layer).toHaveAttribute("aria-hidden", "true");
+  await expect(layer).toHaveAttribute("focusable", "false");
+  await expect(layer).toHaveAttribute("viewBox", "0 0 1109 684");
+  await expect(layer).toHaveCSS("pointer-events", "none");
+  await expect(particles).toHaveCount(4);
+  await expect(layer.locator("[tabindex], a, button, input")).toHaveCount(0);
+  await expect.poll(() => particles.evaluateAll((elements) => elements.every((element) =>
+    element.getAnimations().some((animation) => animation.playState === "running"),
+  ))).toBe(true);
+
+  const firstParticle = particles.first();
+  const initialTransform = await firstParticle.evaluate((element) => getComputedStyle(element).transform);
+  // No pointer or keyboard action starts the animation.
+  await expect.poll(() => firstParticle.evaluate((element) => getComputedStyle(element).transform)).not.toBe(initialTransform);
+  const timing = await particles.evaluateAll((elements) => elements.map((element) => {
+    const animation = element.getAnimations()[0];
+    const { duration, delay, iterations } = animation.effect!.getTiming();
+    return { duration: Number(duration), delay, infinite: iterations === Infinity };
+  }));
+  expect(new Set(timing.map((item) => item.duration)).size).toBe(4);
+  expect(new Set(timing.map((item) => item.delay)).size).toBe(4);
+  for (const item of timing) {
+    expect(item.duration).toBeGreaterThanOrEqual(8_000);
+    expect(item.duration).toBeLessThanOrEqual(15_000);
+    expect(item.delay).toBeLessThan(0);
+    expect(item.infinite).toBe(true);
+  }
+
+  const phases = await particles.evaluateAll((elements) => elements.map((element) => {
+    const animation = element.getAnimations()[0];
+    const { duration, delay } = animation.effect!.getTiming();
+    animation.pause();
+    const read = (progress: number) => {
+      animation.currentTime = Number(duration) * (1 + progress) + delay;
+      return Number(getComputedStyle(element).opacity);
+    };
+    return { start: read(0), middle: read(.5), end: read(1) };
+  }));
+  for (const phase of phases) {
+    expect(phase.start).toBeLessThan(.01);
+    expect(phase.middle).toBeGreaterThan(.1);
+    expect(phase.middle).toBeLessThan(.85);
+    expect(phase.end).toBeLessThan(.01);
+  }
+});
+
+for (const width of [1440, 1280, 1024, 768, 390, 360]) {
+  test(`sunlight dust stays inside the artwork and clear of the screen at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await openArtwork(page);
+    const layer = page.locator(".workspace-sunlight-particles");
+    const particles = layer.locator(".workspace-sunlight-particle");
+    const visibleParticles = particles.filter({ visible: true });
+    await expect(particles).toHaveCount(4);
+    await expect(visibleParticles).toHaveCount(width < 600 ? 2 : 4);
+    await expect(layer).toHaveCSS("overflow", "hidden");
+
+    for (const particle of await particles.all()) {
+      await expect(particle).toHaveCSS("pointer-events", "none");
+      if (!(await particle.isVisible())) {
+        expect(await particle.evaluate((element) => element.getAnimations().length)).toBe(0);
+      }
+    }
+
+    for (const progress of [.2, .5, .8]) {
+      await visibleParticles.evaluateAll((elements, phase) => {
+        for (const element of elements) {
+          const animation = element.getAnimations()[0];
+          const { duration, delay } = animation.effect!.getTiming();
+          animation.pause();
+          animation.currentTime = Number(duration) * (1 + phase) + delay;
+        }
+      }, progress);
+      const image = (await page.locator(".workspace-image").boundingBox())!;
+      const screen = (await page.locator(".workspace-hotspot--laptop").boundingBox())!;
+      for (const particle of await visibleParticles.all()) {
+        const bounds = (await particle.boundingBox())!;
+        expect(bounds.width).toBeGreaterThan(0);
+        expect(bounds.width).toBeLessThan(8);
+        expect(bounds.x).toBeGreaterThanOrEqual(image.x);
+        expect(bounds.y).toBeGreaterThanOrEqual(image.y);
+        expect(bounds.x + bounds.width).toBeLessThanOrEqual(image.x + image.width);
+        expect(bounds.y + bounds.height).toBeLessThanOrEqual(image.y + image.height);
+        // The sunlit side is well clear of the introduction and laptop UI.
+        expect((bounds.x - image.x) / image.width).toBeGreaterThan(.6);
+        const overlapsScreen = bounds.x < screen.x + screen.width && bounds.x + bounds.width > screen.x
+          && bounds.y < screen.y + screen.height && bounds.y + bounds.height > screen.y;
+        expect(overlapsScreen).toBe(false);
+      }
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+
+    const laptop = page.getByRole("button", { name: "Explore my workspace", exact: true });
+    await laptop.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("dialog", { name: "Explore my workspace" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(laptop).toBeFocused();
+    // Native close returns focus before React handles the queued close event.
+    await expect(page.locator(".workspace-panel h2")).toHaveCount(0);
+    const notebook = page.getByRole("button", { name: "Read my notes", exact: true });
+    await notebook.focus();
+    await expect(notebook).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("dialog", { name: "A little note from me" })).toBeVisible();
+  });
+}
+
+test("sunlight dust pauses offscreen and resumes without restarting", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const scene = await openArtwork(page);
+  const layer = page.locator(".workspace-sunlight-particles");
+  await expect.poll(() => layer.evaluate((element) => element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running").length)).toBe(4);
+  await page.locator("footer").scrollIntoViewIfNeeded();
+  await expect.poll(() => layer.evaluate((element) => element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "paused").length)).toBe(4);
+  const pausedTime = await layer.evaluate((element) => Number(element.getAnimations({ subtree: true })[0].currentTime));
+  await scene.scrollIntoViewIfNeeded();
+  await expect.poll(() => layer.evaluate((element) => element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running").length)).toBe(4);
+  await expect.poll(() => layer.evaluate((element) => Number(element.getAnimations({ subtree: true })[0].currentTime))).toBeGreaterThan(pausedTime);
+});
+
 test("bulb and surrounding desk light breathe in synchronized opposite phases", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -475,6 +604,9 @@ test("reduced motion leaves the artwork static while interactions remain usable"
   await expect(page.locator(".mug-steam path").first()).toHaveCSS("animation-name", "none");
   await expect(page.locator(".workspace-laptop-glow")).toHaveCSS("animation-name", "none");
   await expect(page.locator(".workspace-laptop-cursor")).toHaveCSS("animation-name", "none");
+  const dust = page.locator(".workspace-sunlight-particles");
+  await expect(dust).not.toBeVisible();
+  expect(await dust.evaluate((element) => element.getAnimations({ subtree: true }).length)).toBe(0);
   await expect(page.locator(".workspace-bulb-light")).toBeVisible();
   for (const layer of await page.locator(".workspace-bulb-light > span").all()) {
     await expect(layer).toHaveCSS("animation-name", "none");

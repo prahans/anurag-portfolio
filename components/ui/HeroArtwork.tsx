@@ -7,6 +7,7 @@ import { site } from "@/data/site";
 import { WorkspacePanel } from "@/components/ui/WorkspacePanel";
 import { WorkspaceBird } from "@/components/ui/WorkspaceBird";
 import { WorkspaceBulbLight } from "@/components/ui/WorkspaceBulbLight";
+import { WorkspaceSunlightParticles } from "@/components/ui/WorkspaceSunlightParticles";
 import "./hero-workspace.css";
 
 const subscribe = () => () => {};
@@ -101,6 +102,7 @@ export function HeroArtwork() {
           />
           <div className="workspace-sunlight" aria-hidden="true" />
           <WorkspaceBulbLight />
+          <WorkspaceSunlightParticles />
           <WorkspaceBird />
           <div className="workspace-interactions" hidden={!hydrated}>
             <button type="button" className="workspace-hotspot workspace-hotspot--laptop" aria-label="Explore my workspace" aria-haspopup="dialog" onClick={(event) => openPanel("laptop", event)}>
