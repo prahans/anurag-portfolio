@@ -33,7 +33,6 @@
 .workspace-sunlight { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 83% 12%, #fff2c3 0%, #ffe9b440 24%, transparent 61%); opacity: .09; mask-image: linear-gradient(to bottom, #000 65%, transparent 98%); }
 .workspace-interactions { position: absolute; inset: 0; pointer-events: none; }
 .workspace-interactions[hidden], .workspace-tooltip[hidden] { display: none; }
-.workspace-legend[hidden] { visibility: hidden; pointer-events: none; }
 .workspace-hotspot { position: absolute; display: block; margin: 0; padding: 0; border: 0; background: transparent; pointer-events: auto; touch-action: manipulation; cursor: pointer; }
 .workspace-hotspot svg { width: 100%; height: 100%; fill: transparent; stroke: transparent; stroke-width: 1.5; transition: fill .2s ease, stroke .2s ease; }
 .workspace-hotspot polygon { vector-effect: non-scaling-stroke; }
@@ -79,19 +78,8 @@
 .workspace-tooltip--mug { right: 2%; top: 52%; transform: translateY(-100%); }
 .mug-steam { position: absolute; left: 81.7%; top: 44.5%; width: 7.2%; height: 13.2%; overflow: visible; pointer-events: none; opacity: .94; }
 .mug-steam path { stroke: #f7f0e1; stroke-width: 2.4; stroke-linecap: round; filter: drop-shadow(0 0 2px #75634fa8); }
-.workspace-legend { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; column-gap: 15px; padding: 5px 20px 0; min-height: 49px; }
-.workspace-legend > span { font-family: var(--font-handwriting), cursive; font-size: 19px; color: #6c6b5b; }
-.workspace-shortcuts { display: flex; gap: 3px; }
-.workspace-shortcuts button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 8px; border: 0; border-radius: 6px; background: transparent; font-family: var(--font-body), sans-serif; font-size: 11px; color: var(--muted); transition: color .18s, background .18s; }
-.workspace-shortcuts button:hover, .workspace-shortcuts button[aria-expanded="true"] { color: var(--cobalt); background: #315cf509; }
-
-@media (max-width: 1199px) { .hero-artwork { width: 100%; left: 0; } .workspace-legend { padding-inline: 0; column-gap: 10px; } }
-@media (max-width: 999px) { .workspace-legend { justify-content: center; padding-top: 10px; } }
+@media (max-width: 1199px) { .hero-artwork { width: 100%; left: 0; } }
 @media (max-width: 599px) {
-  .workspace-legend { padding: 5px 0 0; gap: 0; flex-direction: column; }
-  .workspace-legend > span { font-size: 18px; }
-  .workspace-shortcuts { gap: 7px; }
-  .workspace-shortcuts button { font-size: 11px; padding-inline: 9px; }
   .workspace-tooltip { font-size: 10px; padding: 6px 9px; }
   .workspace-tooltip--notebook { left: 32%; }
 }
@@ -125,7 +113,7 @@
   .workspace-laptop-cursor { opacity: .8; }
   .mug-steam path { opacity: .72; }
   .workspace-scene { transform: none !important; }
-  .workspace-hotspot, .workspace-hotspot svg, .workspace-tooltip, .workspace-shortcuts button { transition: none; }
+  .workspace-hotspot, .workspace-hotspot svg, .workspace-tooltip { transition: none; }
 }
 
 @media (max-width: 599px) {

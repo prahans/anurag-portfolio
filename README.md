@@ -108,7 +108,7 @@ The hero uses the approved `design/hero-workspace-reference.png`, cropped and ed
 
 - The laptop opens an accessible dialog with keyboard-operated Code and Preview tabs. The preview's “Add an idea” button updates a local demo counter.
 - The notebook opens a short personal note. Both dialogs support close buttons, Escape, backdrop dismissal, contained keyboard focus, and focus restoration.
-- The mug displays steam and a chai message on hover/focus or tap. Escape or an outside tap dismisses the message. Visible Workspace, Notes, and Chai controls provide larger touch targets.
+- The mug has continuously drifting coffee steam and a coffee note on hover, focus, or tap. Escape or an outside tap dismisses the note. The laptop, notebook, and mug remain directly interactive in the artwork, without an extra shortcut row beneath it.
 - Entrance, sunlight, and small pointer-depth effects respect reduced motion. The artwork is visible without JavaScript; inactive controls remain hidden.
 
 The postcard and other objects remain part of the flattened artwork. Dialog content does not replace the baked-in screen pixels, and the mug does not physically tilt. The previous portrait and its separate decorations are no longer rendered.

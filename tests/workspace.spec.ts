@@ -110,10 +110,21 @@ for (const width of [1440, 1280, 1024, 768, 390, 360]) {
   });
 }
 
+test("the redundant shortcut row is absent while artwork interactions remain", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openArtwork(page);
+  await expect(page.getByText("Explore the little details")).toHaveCount(0);
+  await expect(page.locator(".workspace-legend, .workspace-shortcuts")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Open workspace panel", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Explore my workspace", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Read my notes", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Fueled by curiosity & coffee", exact: true })).toBeVisible();
+});
+
 test("workspace tabs support keyboard selection, focus containment, and focus return", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await openArtwork(page);
-  const trigger = page.getByRole("button", { name: "Open workspace panel", exact: true });
+  const trigger = page.getByRole("button", { name: "Explore my workspace", exact: true });
   await trigger.focus();
   await page.keyboard.press("Enter");
   const panel = page.getByRole("dialog", { name: "Explore my workspace" });
@@ -421,7 +432,7 @@ test("approved workspace artwork remains visible without JavaScript", async ({ b
     await expect.poll(() => artwork.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("I build digital experiences that make life a little better.");
     await expect(page.getByRole("dialog")).toHaveCount(0);
-    await expect(page.locator(".workspace-legend")).not.toBeVisible();
+    await expect(page.locator(".workspace-legend")).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Read my notes", exact: true })).toHaveCount(0);
   } finally {
     await context.close();

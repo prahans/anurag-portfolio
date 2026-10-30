@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore, type MouseEvent, type PointerEvent } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
-import { Code2, Coffee, NotebookPen } from "lucide-react";
 import { site } from "@/data/site";
 import { WorkspacePanel } from "@/components/ui/WorkspacePanel";
 import { WorkspaceBird } from "@/components/ui/WorkspaceBird";
@@ -137,14 +136,6 @@ export function HeroArtwork() {
             <span className="workspace-tooltip workspace-tooltip--mug" id="coffee-tooltip" role="tooltip" hidden={!coffeeVisible}>Fueled by curiosity &amp; coffee ☕</span>
           </div>
         </motion.div>
-      </div>
-      <div className="workspace-legend" hidden={!hydrated}>
-        <span>Explore the little details</span>
-        <div className="workspace-shortcuts" role="group" aria-label="Explore the workspace artwork">
-          <button type="button" aria-label="Open workspace panel" onClick={(event) => openPanel("laptop", event)}><Code2 size={14} aria-hidden="true" /> Workspace</button>
-          <button type="button" aria-label="Open notebook" onClick={(event) => openPanel("notebook", event)}><NotebookPen size={14} aria-hidden="true" /> Notes</button>
-          <button type="button" aria-label="Show coffee note" aria-expanded={coffeeVisible} aria-describedby={coffeeVisible ? "coffee-tooltip" : undefined} data-coffee-control onClick={toggleCoffee} {...coffeeFocus}><Coffee size={14} aria-hidden="true" /> Coffee</button>
-        </div>
       </div>
       <WorkspacePanel kind={panel} onClose={() => setPanel(null)} returnFocusRef={openerRef} />
     </div>
