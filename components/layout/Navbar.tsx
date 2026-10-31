@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Download, Menu, X } from "lucide-react";
+import { Download, Heart, Menu, X } from "lucide-react";
 import { navigation, site } from "@/data/site";
 
 export function Navbar() {
@@ -98,7 +98,7 @@ export function Navbar() {
               Get my résumé <Download size={16} aria-hidden="true" />
             </a>
           )}
-          <a className="button button-dark header-contact" href="#contact">Let’s Talk <ArrowUpRight size={16} aria-hidden="true" /></a>
+          <a className="button button-dark header-contact" href="#contact">Say Hello <Heart className="header-heart" size={16} strokeWidth={1.8} aria-hidden="true" /></a>
         </div>
       </div>
     </header>

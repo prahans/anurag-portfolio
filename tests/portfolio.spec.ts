@@ -104,7 +104,10 @@ test("desktop calls to action and active section follow their destinations", asy
   await page.getByRole("navigation").getByRole("link", { name: "04. Skills" }).click();
   await expect(page).toHaveURL(/#skills$/);
   await expect(page.getByRole("navigation").getByRole("link", { name: "04. Skills" })).toHaveAttribute("aria-current", "location");
-  await page.getByRole("link", { name: "Let’s Talk", exact: true }).click();
+  const hello = page.getByRole("link", { name: "Say Hello", exact: true });
+  await expect(hello).toHaveAttribute("href", "#contact");
+  await expect(hello.locator("svg.header-heart")).toBeVisible();
+  await hello.click();
   await expect(page).toHaveURL(/#contact$/);
   await expect(page.locator("#contact")).toBeInViewport();
   await expect(page.getByRole("navigation").getByRole("link", { name: "05. Contact" })).toHaveAttribute("aria-current", "location");
@@ -133,7 +136,9 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
     const mobileResume = navigation.locator("a[download]");
     const contactResume = page.locator("#contact a[download]");
     const menu = page.locator(".menu-toggle");
-    const talk = header.getByRole("link", { name: "Let’s Talk", exact: true });
+    const talk = header.getByRole("link", { name: "Say Hello", exact: true });
+    await expect(talk).toHaveAttribute("href", "#contact");
+    await expect(talk.locator("svg.header-heart")).toHaveAttribute("aria-hidden", "true");
 
     for (const link of [desktopResume, mobileResume, contactResume]) {
       await expect(link).toHaveAttribute("href", resumeURL);
