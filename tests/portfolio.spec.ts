@@ -106,7 +106,7 @@ test("desktop calls to action and active section follow their destinations", asy
   await expect(page.getByRole("navigation").getByRole("link", { name: "04. Skills" })).toHaveAttribute("aria-current", "location");
   const hello = page.getByRole("link", { name: "Say Hello", exact: true });
   await expect(hello).toHaveAttribute("href", "#contact");
-  await expect(hello.locator("svg.header-heart")).toBeVisible();
+  await expect(hello.locator("svg.lucide-arrow-up-right")).toBeVisible();
   await hello.click();
   await expect(page).toHaveURL(/#contact$/);
   await expect(page.locator("#contact")).toBeInViewport();
@@ -138,7 +138,7 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
     const menu = page.locator(".menu-toggle");
     const talk = header.getByRole("link", { name: "Say Hello", exact: true });
     await expect(talk).toHaveAttribute("href", "#contact");
-    await expect(talk.locator("svg.header-heart")).toHaveAttribute("aria-hidden", "true");
+    await expect(talk.locator("svg.lucide-arrow-up-right")).toHaveAttribute("aria-hidden", "true");
 
     for (const link of [desktopResume, mobileResume, contactResume]) {
       await expect(link).toHaveAttribute("href", resumeURL);

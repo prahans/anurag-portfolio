@@ -83,9 +83,7 @@ section { scroll-margin-top: 100px; }
 .nav-link.is-active::after, .nav-link:hover::after { transform: scaleX(1); }
 .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .header-resume { min-height: 42px; padding: 9px 16px; font-size: 12px; }
-.header-contact { min-height: 42px; padding: 9px 19px; font-size: 12px; gap: 9px; }
-.header-contact .header-heart { color: #ffd0da; fill: currentColor; }
-.header-contact:hover .header-heart { transform: translateY(-1px) scale(1.08); }
+.header-contact { min-height: 42px; padding: 9px 19px; font-size: 12px; }
 .mobile-resume { display: none; }
 .menu-toggle { display: none; }
 
@@ -190,7 +188,6 @@ section { scroll-margin-top: 100px; }
   .hero-art-reveal { margin-top: 31px; aspect-ratio: 1.1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .header-contact .header-heart, .header-contact:hover .header-heart { transition: none; transform: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
