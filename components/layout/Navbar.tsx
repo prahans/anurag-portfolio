@@ -85,7 +85,7 @@ export function Navbar() {
               className="button button-resume mobile-resume"
               href={site.resume}
               download={site.resumeDownloadName}
-              aria-label="Download my résumé (PDF)"
+              aria-label="Get my résumé (download PDF)"
               onClick={() => { setOpen(false); menuButton.current?.focus(); }}
             >
               Get my résumé <Download size={16} aria-hidden="true" />
@@ -94,7 +94,7 @@ export function Navbar() {
         </nav>
         <div className="header-actions">
           {site.resume && (
-            <a className="button button-resume header-resume" href={site.resume} download={site.resumeDownloadName} aria-label="Download my résumé (PDF)">
+            <a className="button button-resume header-resume" href={site.resume} download={site.resumeDownloadName} aria-label="Get my résumé (download PDF)">
               Get my résumé <Download size={16} aria-hidden="true" />
             </a>
           )}

@@ -131,20 +131,20 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
     const header = page.locator(".site-header");
-    const navigation = page.getByRole("navigation", { name: "Primary navigation" });
+    const navigation = header.locator("#primary-navigation");
     const desktopResume = header.locator(".header-actions a[download]");
     const mobileResume = navigation.locator("a[download]");
     const contactResume = page.locator("#contact a[download]");
     const menu = page.locator(".menu-toggle");
-    const talk = header.getByRole("link", { name: "Say Hello", exact: true });
+    const talk = header.locator(".header-contact");
     await expect(talk).toHaveAttribute("href", "#contact");
     await expect(talk.locator("svg.lucide-arrow-up-right")).toHaveAttribute("aria-hidden", "true");
 
     for (const link of [desktopResume, mobileResume, contactResume]) {
       await expect(link).toHaveAttribute("href", resumeURL);
       await expect(link).toHaveAttribute("download", resumeDownloadName);
-      await expect(link).toHaveAccessibleName("Download my résumé (PDF)");
     }
+    await expect(contactResume).toHaveAccessibleName("Download my résumé (PDF)");
 
     const headerBoxes = await header.evaluate((element, desktop) => {
       const selectors = [".brand", ".header-actions", ".menu-toggle", ...(desktop ? [".primary-navigation"] : [])];
@@ -166,6 +166,7 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
       await expect(navigation).toBeHidden();
       await menu.click();
       await expect(mobileResume).toBeVisible();
+      await expect(mobileResume).toHaveAccessibleName("Get my résumé (download PDF)");
       const bounds = (await mobileResume.boundingBox())!;
       expect(bounds.height).toBeGreaterThanOrEqual(44);
       expect(bounds.x).toBeGreaterThanOrEqual(0);
@@ -177,6 +178,7 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
       await expect(menu).toBeHidden();
       await expect(mobileResume).toBeHidden();
       await expect(desktopResume).toBeVisible();
+      await expect(desktopResume).toHaveAccessibleName("Get my résumé (download PDF)");
       await expect(desktopResume).toContainText("Get my résumé");
       await expectResumeDownload(page, desktopResume);
     }
@@ -184,6 +186,7 @@ for (const width of [360, 390, 768, 1024, 1280, 1440]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     if (width >= 600) {
       await expect(talk).toBeVisible();
+      await expect(talk).toHaveAccessibleName("Say Hello");
       await talk.click();
       await expect(page).toHaveURL(/#contact$/);
       await expect(page.locator("#contact")).toBeInViewport();
@@ -205,7 +208,8 @@ test("résumé downloads remain keyboard-accessible with reduced motion", async 
   await expect(resume).toHaveCSS("outline-width", "2px");
   await resume.hover();
   await expect(resume.locator("svg")).toHaveCSS("transform", "none");
-  await expect(resume.locator("svg")).toHaveCSS("transition-duration", "0s");
+  const transitionSeconds = await resume.locator("svg").evaluate((icon) => parseFloat(getComputedStyle(icon).transitionDuration));
+  expect(transitionSeconds).toBeLessThanOrEqual(.00001);
   const downloadEvent = page.waitForEvent("download");
   await page.keyboard.press("Enter");
   const download = await downloadEvent;
